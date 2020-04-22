@@ -1,0 +1,13 @@
+django
+djangorestframework
+django-filter
+django-uuslug
+django-mptt
+django-debug-toolbar
+django-extensions
+pillow
+sorl-thumbnail
+python-memcached
+gunicorn
+psycopg2-binary
+pillow
