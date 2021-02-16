@@ -9,7 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
-
+from django.views.generic import FormView
 
 from .tokens import account_activation_token
 from .forms import (UserCreationForm,UserAuthenticationForm,
@@ -59,28 +59,30 @@ class AccountActivationSent(TemplateView):
 
 
 
-def signup(request):
-    form = UserCreationForm()
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+class SignupView(FormView):
+    form_class = UserCreationForm
+    template_name = 'users/signup.html'
+
+    def form_valid(self,form):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)
+            current_site = get_current_site(self.request)
             user.refresh_from_db()  # load the profile instance created by the signal
             user.profile.birth_date = form.cleaned_data.get('birth_date')
             user.save()
             subject = 'Activate Your MySite Account'
             message = render_to_string('users/account_activation_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
             })
             user.email_user(subject, message)
             return redirect('account_activation_sent')
-    return render(request, 'users/signup.html', {'form': form})
+        return super().form_valid(form)
+
 
 
 def activate(request, uidb64, token):

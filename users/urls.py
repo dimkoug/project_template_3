@@ -5,13 +5,13 @@ from django.contrib.auth import views as auth_views
 from .views import (UserLoginView,UserLogoutView,UserPasswordResetView,
                     UserPasswordResetCompleteView,
                     UserPasswordResetDoneView,UserPasswordResetConfirmView,
-                    AccountActivationSent, activate, signup)
+                    AccountActivationSent, activate, SignupView)
 
 from rest_framework.authtoken import views
 
 
 urlpatterns = [
-    path('signup/', signup, name='signup'),
+    path('signup/', SignupView.as_view(), name='signup'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('password_reset', UserPasswordResetView.as_view(), name='password_reset'),
