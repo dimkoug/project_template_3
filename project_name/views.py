@@ -1,11 +1,10 @@
 from django.views.generic import TemplateView
-
-from core.mixins import ProtectedViewMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class HomeView(TemplateView):
     template_name = "index.html"
 
 
-class ManageView(ProtectedViewMixin, TemplateView):
+class ManageView(LoginRequiredMixin, TemplateView):
     template_name = "manage.html"

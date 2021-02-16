@@ -1,21 +1,62 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-
-from .forms import UserCreationForm
-# Create your views here.
-
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
+
+
 from .tokens import account_activation_token
-
-
+from .forms import (UserCreationForm,UserAuthenticationForm,
+                    UserPasswordResetForm,UserSetPasswordForm)
 from .models import User
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
+
+
+
+class UserLoginView(auth_views.LoginView):
+    template_name = 'users/login.html'
+    form_class = UserAuthenticationForm
+
+
+class UserLogoutView(auth_views.LogoutView):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect(settings.LOGOUT_REDIRECT_URL)
+
+
+class UserPasswordResetView(auth_views.PasswordResetView):
+    email_template_name = 'users/password_reset_email.html'
+    form_class = UserPasswordResetForm
+    subject_template_name = 'users/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+    template_name = 'users/password_reset_form.html'
+
+
+class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'users/password_reset_complete.html'
+    title = 'Password reset complete'
+
+
+class UserPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'users/password_reset_done.html'
+    title = 'Password reset sent'
+
+
+class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    success_url = reverse_lazy('password_reset_complete')
+    template_name = 'users/password_reset_confirm.html'
+    title = 'Enter new password'
+
+
+
+class AccountActivationSent(TemplateView):
+    template_name = 'users/account_activation_sent.html'
+
 
 
 def signup(request):
@@ -40,10 +81,6 @@ def signup(request):
             user.email_user(subject, message)
             return redirect('account_activation_sent')
     return render(request, 'users/signup.html', {'form': form})
-
-
-class AccountActivationSent(TemplateView):
-    template_name = 'users/account_activation_sent.html'
 
 
 def activate(request, uidb64, token):

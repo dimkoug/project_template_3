@@ -54,6 +54,13 @@ class SuccessUrlMixin:
         return reverse_lazy("{}:{}-list".format(app, model_name))
 
 
+class FormInvalidMixin:
+    def form_invalid(self, form, **kwargs):
+        for field in form.errors:
+            form[field].field.widget.attrs['class'] += ' is-invalid'
+        return self.render_to_response(self.get_context_data(form=form))
+
+
 class MessageMixin:
     def form_valid(self, form):
         obj = form.save()
