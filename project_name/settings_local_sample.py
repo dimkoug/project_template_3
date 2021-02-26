@@ -9,10 +9,16 @@ This file is used to create a local settings_local.py file for development
 
 DEBUG = True
 
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000'
+]
+
 ALLOWED_HOSTS = ['127.0.0.1']
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 
+
 INSTALLED_APPS += (
+    'corsheaders',
     'debug_toolbar',
     'django_extensions',
 )
@@ -21,6 +27,7 @@ GOOGLE_MAPS_API_KEY = ''
 
 MIDDLEWARE += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 DEBUG_TOOLBAR_PANELS = [
