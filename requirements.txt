@@ -11,3 +11,4 @@ python-memcached
 gunicorn
 psycopg2-binary
 pillow
+django-cors-headers
