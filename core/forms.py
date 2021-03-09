@@ -64,4 +64,3 @@ class BootstrapForm:
                 self.fields[field].widget.attrs.update({
                     'class': 'form-control'
                 })
-

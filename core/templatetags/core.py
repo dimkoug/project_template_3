@@ -26,20 +26,19 @@ def get_url(context, *args):
 
     model = context['model']
     obj = None
-    print(len(args))
+    action = ''
     lower_name = model.__name__.lower()
     app = model._meta.app_label
-    if len(args) == 0:
-        return ''
+    if len(args) == 1:
+        action = args[0]
     if len(args) == 2:
         action = args[0]
-        app = args[1]
+        obj = args[1]
     if len(args) ==3:
         action = args[0]
         obj = args[1]
         app = args[2]
         lower_name = obj.__class__.__name__.lower()
-
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if hasattr(obj, 'uuid'):
         url = reverse_lazy(url_string, kwargs={'uuid': obj.uuid})
