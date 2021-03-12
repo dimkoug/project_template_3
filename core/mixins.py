@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.http import JsonResponse
+from django import template
+from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -54,14 +57,7 @@ class SuccessUrlMixin:
         return reverse_lazy("{}:{}-list".format(app, model_name))
 
 
-class FormInvalidMixin:
-    def form_invalid(self, form, **kwargs):
-        for field in form.errors:
-            form[field].field.widget.attrs['class'] += ' is-invalid'
-        return self.render_to_response(self.get_context_data(form=form))
-
-
-class MessageMixin:
+class FormMixin:
     def form_valid(self, form):
         obj = form.save()
         model_name = self.model.__name__.lower()
@@ -70,16 +66,109 @@ class MessageMixin:
             return redirect(reverse_lazy("{}:{}-create".format(app, model_name)))
         if 'continue' in self.request.POST:
             return redirect(reverse_lazy("{}:{}-update".format(app, model_name), kwargs={"pk":obj.pk}))
-        messages.success(
-            self.request, 'Your {} was proccesed successfully!'.format(
-                self.model.__name__))
+        if not self.request.is_ajax():
+            messages.success(
+                self.request, 'Your {} was proccesed successfully!'.format(
+                    self.model.__name__))
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(
-            self.request, 'error ocured for {}'.format(
-                self.model.__name__))
-        return super().form_invalid(form)
+    def form_invalid(self, form, **kwargs):
+        data = dict()
+        for field in form.errors:
+            form[field].field.widget.attrs['class'] += ' is-invalid'
+        context = self.get_context_data(form=form)
+        data['html_form'] = render_to_string(
+            self.ajax_partial, context, request=self.request)
+        if self.request.is_ajax():
+            return JsonResponse(data)
+        else:
+            messages.error(
+                self.request, 'error ocured for {}'.format(
+                    self.model.__name__))
+            return self.render_to_response(self.get_context_data(form=form))
+
+
+class ObjectMixin:
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data()
+        if request.is_ajax():
+            html_form = render_to_string(
+                self.ajax_partial, context, request)
+            return JsonResponse({'html_form': html_form})
+        else:
+            return super().get(request, *args, **kwargs)
+
+
+class AjaxCreateMixin:
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        context = self.get_context_data()
+        if request.is_ajax():
+            html_form = render_to_string(
+                self.ajax_partial, context, request)
+            return JsonResponse({'html_form': html_form})
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        data = dict()
+        context = self.get_context_data()
+        if form.is_valid():
+            obj = form.save()
+            if obj:
+                data['form_is_valid'] = True
+                data['list'] = render_to_string(
+                    self.ajax_list_partial, context, self.request)
+            else:
+                data['form_is_valid'] = False
+                return super().form_invalid(form)
+            data['html_form'] = render_to_string(
+                self.ajax_partial, context, request=self.request)
+            if self.request.is_ajax():
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        else:
+            return super().form_invalid(form)
+
+
+class AjaxUpdateMixin(ObjectMixin):
+    def form_valid(self, form):
+        data = dict()
+        context = self.get_context_data()
+        if form.is_valid():
+            obj = form.save()
+            if obj:
+                data['form_is_valid'] = True
+                data['list'] = render_to_string(
+                    self.ajax_list_partial, context, self.request)
+            else:
+                data['form_is_valid'] = False
+            data['html_form'] = render_to_string(
+                self.ajax_partial, context, request=self.request)
+            if self.request.is_ajax():
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        else:
+            return super().form_invalid(form)
+
+
+class AjaxDeleteMixin(ObjectMixin):
+    def post(self, *args, **kwargs):
+        if self.request.is_ajax():
+            self.object = self.get_object()
+            self.object.delete()
+            data = dict()
+            data['form_is_valid'] = True
+            context = self.get_context_data()
+            context['object_list'] = self.get_queryset()
+            data['list'] = render_to_string(
+                self.ajax_list_partial, context, self.request)
+            return JsonResponse(data)
+        else:
+            return self.delete(*args, **kwargs)
 
 
 class PassRequestToFormViewMixin:
@@ -92,5 +181,5 @@ class BaseViewMixin(LoginRequiredMixin, DynamicTemplateMixin,
                     ModelMixin):
     pass
 
-class FormViewMixin(BaseViewMixin,SuccessUrlMixin,MessageMixin):
+class FormViewMixin(BaseViewMixin,SuccessUrlMixin,PassRequestToFormViewMixin, FormMixin):
     pass
