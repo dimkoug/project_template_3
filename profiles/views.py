@@ -9,8 +9,6 @@ from .forms import ProfileForm
 from .models import Profile
 
 
-
-
 class ProtectProfile:
     def dispatch(self, *args, **kwargs):
         if self.request.user.profile.pk != self.get_object().pk:
@@ -18,14 +16,21 @@ class ProtectProfile:
         return super().dispatch(*args, **kwargs)
 
 
-class ProfileDetail(ProtectProfile, LoginRequiredMixin, DetailView):
+class ProfileDetailView(ProtectProfile, LoginRequiredMixin, DetailView):
     model = Profile
 
 
-class ProfileUpdate(ProtectProfile, LoginRequiredMixin, UpdateView):
+class ProfileUpdateView(ProtectProfile, LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileForm
     template_name = 'profiles/profile_form.html'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('profile-detail', kwargs = {'pk': self.get_object().pk})
+
+class ProfileDeleteView(ProtectProfile, LoginRequiredMixin, DeleteView):
+    model = Profile
+    template_name = 'profiles/profile_confirm_delete.html'
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('profile-detail', kwargs = {'pk': self.get_object().pk})
