@@ -1,16 +1,16 @@
 from django import template
 from django.urls import reverse_lazy
-register = template.Library()
 
+register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def get_url(context, *args):
     '''
-    example 1  "{% get_url 'list' %}"
-    example 2  "{% get_url 'create' %}"
-    example 3  "{% get_url 'create' 'cms' %}"
-    example 4  "{% get_url 'detail' obj  %}"
-    example 5  "{% get_url 'detail' obj 'cms'  %}"
+    example 1  get_url 'list'
+    example 2  get_url 'create'
+    example 3  get_url 'create' 'cms'
+    example 4  get_url 'detail' obj
+    example 5  get_url 'detail' obj 'cms'
 
     the first argument is action create or list or detail or update or delete
     the second argument is a model object
