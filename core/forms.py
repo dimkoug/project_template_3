@@ -52,12 +52,13 @@ def unique_bootstrap_field_formset(field_name):
             values = set()
             for form in self.forms:
                 if form.cleaned_data:
-                    value = form.cleaned_data[field_name]
-                    if value in values:
-                        form[field_name].field.widget.attrs['class'] += ' is-invalid'
-                        form.add_error(field_name, "{} {} cannot be added multiple times.".format(
-                            field_name, value))
-                    values.add(value)
+                    value = form.cleaned_data.get(field_name)
+                    if value:
+                        if value in values:
+                            form[field_name].field.widget.attrs['class'] += ' is-invalid'
+                            form.add_error(field_name, "{} {} cannot be added multiple times.".format(
+                                field_name, value))
+                        values.add(value)
     return UniqueFieldBootstrapFormSet
 
 
