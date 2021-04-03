@@ -27,6 +27,7 @@ def get_url(context, *args):
     model = context['model']
     obj = None
     action = ''
+    url = ''
     lower_name = model.__name__.lower()
     app = model._meta.app_label
     if len(args) == 1:

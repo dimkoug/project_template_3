@@ -36,6 +36,9 @@ class ModelMixin:
         context['model'] = self.model
         context['model_name'] = self.model.__name__.lower()
         context['app_name'] = self.model._meta.app_label
+        if hasattr(self, 'template'):
+            context['page_title'] = self.model.__name__.capitalize() + ' ' + self.template.capitalize()
+        print(self.template)
         return context
 
 
@@ -101,6 +104,12 @@ class ObjectMixin:
 
 
 class AjaxCreateMixin:
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = self.get_queryset()
+        return context
+
     def get(self, request, *args, **kwargs):
         self.object = None
         context = self.get_context_data()
@@ -122,9 +131,8 @@ class AjaxCreateMixin:
                     self.ajax_list_partial, context, self.request)
             else:
                 data['form_is_valid'] = False
-                return super().form_invalid(form)
-            data['html_form'] = render_to_string(
-                self.ajax_partial, context, request=self.request)
+                data['html_form'] = render_to_string(
+                    self.ajax_partial, context, request=self.request)
             if self.request.is_ajax():
                 return JsonResponse(data)
             else:
@@ -134,6 +142,12 @@ class AjaxCreateMixin:
 
 
 class AjaxUpdateMixin(ObjectMixin):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = self.get_queryset()
+        return context
+
     def form_valid(self, form):
         data = dict()
         context = self.get_context_data()
@@ -156,6 +170,12 @@ class AjaxUpdateMixin(ObjectMixin):
 
 
 class AjaxDeleteMixin(ObjectMixin):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = self.get_queryset()
+        return context
+
     def post(self, *args, **kwargs):
         if self.request.is_ajax():
             self.object = self.get_object()
