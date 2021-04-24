@@ -28,6 +28,29 @@ class DynamicTemplateMixin:
         return [view_template]
 
 
+class PaginationMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not context.get('is_paginated', False):
+            return context
+
+        paginator = context.get('paginator')
+        num_pages = paginator.num_pages
+        current_page = context.get('page_obj')
+        page_no = current_page.number
+
+        if num_pages <= 11 or page_no <= 6:  # case 1 and 2
+            pages = [x for x in range(1, min(num_pages + 1, 12))]
+        elif page_no > num_pages - 6:  # case 4
+            pages = [x for x in range(num_pages - 10, num_pages + 1)]
+        else:  # case 3
+            pages = [x for x in range(page_no - 5, page_no + 6)]
+
+        context.update({'pages': pages})
+        return context
+
+
+
 class ModelMixin:
     '''
     Add  app and model to context
@@ -107,7 +130,14 @@ class ObjectMixin:
 class AjaxCreateMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = self.get_queryset()
+        if self.paginate_by:
+            query = self.get_queryset()[:self.paginate_by]
+        else:
+            query = self.get_queryset()
+
+        context.update({
+            'object_list': query
+        })
         return context
 
     def get(self, request, *args, **kwargs):
@@ -168,7 +198,14 @@ class AjaxUpdateMixin(ObjectMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = self.get_queryset()
+        if self.paginate_by:
+            query = self.get_queryset()[:self.paginate_by]
+        else:
+            query = self.get_queryset()
+
+        context.update({
+            'object_list': query
+        })
         return context
 
     def form_valid(self, form):
@@ -213,7 +250,14 @@ class AjaxUpdateMixin(ObjectMixin):
 class AjaxDeleteMixin(ObjectMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = self.get_queryset()
+        if self.paginate_by:
+            query = self.get_queryset()[:self.paginate_by]
+        else:
+            query = self.get_queryset()
+
+        context.update({
+            'object_list': query
+        })
         return context
     def post(self, *args, **kwargs):
         key_pref = "*{}*".format(self.model.__name__.lower())
