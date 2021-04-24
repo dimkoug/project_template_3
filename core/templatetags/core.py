@@ -52,3 +52,12 @@ def get_url(context, *args):
         url_string = '{}:{}-{}'.format(app, lower_name, action)
         url = reverse_lazy(url_string)
     return url
+
+
+@register.simple_tag(takes_context=True)
+def get_template_name(context, *args):
+    model = context['model']
+    app = model._meta.app_label
+    lower_name = model.__name__.lower()
+    template_name = "{}/partials/{}_list_partial.html".format(app,lower_name)
+    return template_name
