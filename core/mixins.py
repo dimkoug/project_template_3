@@ -160,6 +160,10 @@ class AjaxCreateMixin:
             return self.render_to_response(self.get_context_data(form=form))
 
 
+class AjaxDetailMixin(ObjectMixin):
+    pass
+
+
 class AjaxUpdateMixin(ObjectMixin):
 
     def get_context_data(self, **kwargs):
