@@ -1,4 +1,11 @@
+six
+wheel
 pillow
+mypy
+python-language-server
+flake8
+pylama
+pylama-pylint
 sorl-thumbnail
 python-memcached
 gunicorn
@@ -12,6 +19,7 @@ django-uuslug
 django-mptt
 django-debug-toolbar
 django-extensions
+
 
 
 
