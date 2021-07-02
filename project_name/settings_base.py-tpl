@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'mptt',
     'core',
     'users',
+    'users.api',
     'profiles',
 ]
 
@@ -198,5 +199,5 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'todoapiproject.utils.my_jwt_response_handler'
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.my_jwt_response_handler'
 }
