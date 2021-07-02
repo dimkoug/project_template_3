@@ -1,5 +1,8 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import serializers
+
+User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):

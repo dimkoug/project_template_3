@@ -1,8 +1,11 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from rest_framework.decorators import api_view
+
+User = get_user_model()
 
 
 from .serializers import (
