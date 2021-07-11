@@ -24,12 +24,12 @@ from rest_framework_jwt.views import (
   obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 )
 
-from .views import HomeView, ManageView
+from .views import IndexView, ManageView
 
 
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
+    path('', IndexView.as_view(), name='index'),
     path('manage/', ManageView.as_view(), name='manage'),
     path('users/', include('users.urls')),
     path('users/api/', include('users.api.routers')),

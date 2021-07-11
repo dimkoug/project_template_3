@@ -1,0 +1,21 @@
+{% url 'manage' as manage_url %}
+{% url 'index' as index_url %}
+
+
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == manage_url %}active {% endif %}" aria-current="page" href="{{manage_url}}">
+          <span data-feather="home"></span>
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{index_url}}">
+          View site
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

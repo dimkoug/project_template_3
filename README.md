@@ -1,6 +1,17 @@
 Django customized project template
 =================================
 
+
+Features
+----------
+1. Custom User model
+2. Custom Profile model
+3. Basic Login View
+4. Basic Signup View
+5. Different Views for cms
+6. Bootstrap version 5 included
+
+
 Quick start
 -----------
 This template is for django version 3.*
