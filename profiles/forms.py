@@ -8,4 +8,4 @@ from core.forms import BootstrapForm
 class ProfileForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('bio',)
+        fields = ('bio', 'location', 'birth_date')
