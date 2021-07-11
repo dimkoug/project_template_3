@@ -19,7 +19,4 @@ django-uuslug
 django-mptt
 django-debug-toolbar
 django-extensions
-
-
-
-
+django-admin-sortable2
