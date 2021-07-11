@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import get_user_model
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
@@ -12,10 +14,11 @@ from django.template.loader import render_to_string
 from django.views.generic import FormView
 
 from .tokens import account_activation_token
-from .forms import (UserCreationForm,UserAuthenticationForm,
-                    UserPasswordResetForm,UserSetPasswordForm)
-from .models import User
-
+from .forms import (
+    UserCreationForm, UserAuthenticationForm,
+    UserPasswordResetForm
+)
+User = get_user_model()
 
 
 class UserLoginView(auth_views.LoginView):
@@ -53,17 +56,15 @@ class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     title = 'Enter new password'
 
 
-
 class AccountActivationSent(TemplateView):
     template_name = 'users/account_activation_sent.html'
-
 
 
 class SignupView(FormView):
     form_class = UserCreationForm
     template_name = 'users/signup.html'
 
-    def form_valid(self,form):
+    def form_valid(self, form):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -82,7 +83,6 @@ class SignupView(FormView):
             user.email_user(subject, message)
             return redirect('account_activation_sent')
         return super().form_valid(form)
-
 
 
 def activate(request, uidb64, token):

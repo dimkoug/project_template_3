@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField,
     AuthenticationForm as BaseAuthenticationForm,
@@ -9,8 +10,7 @@ from django.contrib.auth.forms import (
 
 from core.forms import BootstrapForm
 
-from .models import User
-
+User = get_user_model()
 
 
 class UserCreationForm(BootstrapForm, BaseUserCreationForm):
@@ -20,7 +20,6 @@ class UserCreationForm(BootstrapForm, BaseUserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'birth_date', 'password1', 'password2', )
-
 
 
 class UserAuthenticationForm(BootstrapForm, BaseAuthenticationForm):

@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class HomeView(TemplateView):
-    template_name = "index.html"
+    template_name = "site/index.html"
 
 
 class ManageView(LoginRequiredMixin, TemplateView):
-    template_name = "manage.html"
+    template_name = "cms/manage.html"
