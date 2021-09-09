@@ -23,41 +23,6 @@
   </head>
   <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
     {% include 'site/navbar.html' %}
-    <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
-      <div class="row py-2">
-        {% for category in categories %}
-        {% if category.second_level %}
-        <div class="col">
-          <div class="level-1">{{category}}</div>
-          <hr>
-          {% if category.second_level %}
-            {% for child in category.second_level %}
-            <div class="col">
-              <div class="level-2">{{child}}</div>
-              {% if child.third_level %}
-              <div class="row">
-                {% for ch in child.third_level %}
-                <div class="col" > <a href="{% url 'shop:catalog' %}?category={{ch.id}}" class="nav-category link">{{ch.name}}</a>
-                </div>
-                {% endfor %}
-              </div>
-              {% endif %}
-            </div>
-            {% endfor %}
-          {% endif %}
-        </div>
-        {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
-      <div class="row py-2">
-        <div class="col">
-          <img src="{% static 'img/loading.svg' %}" class="loading">
-        </div>
-      </div>
-      <div class="row py-2 basket_res"></div>
-    </div>
     <main class="container-fluid">
         <div class="row py-2">
           <div class="col-12">
