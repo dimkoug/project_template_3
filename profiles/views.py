@@ -6,8 +6,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 # Create your views here.
 
-from shop.models import Address
-
 from .forms import ProfileForm
 from .models import Profile
 
@@ -24,12 +22,6 @@ class ProfileDetailView(ProtectProfile, LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['billing_address_list'] = Address.objects.select_related(
-            'profile').filter(profile=self.get_object(),
-                              address_type=Address.BILLING_ADDRESS)
-        context['shipping_address_list'] = Address.objects.select_related(
-            'profile').filter(profile=self.get_object(),
-                              address_type=Address.SHIPPING_ADDRESS)
         return context
 
 

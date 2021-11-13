@@ -21,48 +21,38 @@ from .forms import (
 User = get_user_model()
 
 
-class UserLoginView(auth_views.LoginView):
-    template_name = 'users/login.html'
+class LoginView(auth_views.LoginView):
+    template_name = 'login.html'
     form_class = UserAuthenticationForm
 
 
-class UserLogoutView(auth_views.LogoutView):
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return redirect(settings.LOGOUT_REDIRECT_URL)
+class LogoutView(auth_views.LogoutView):
+    pass
 
 
-class UserPasswordResetView(auth_views.PasswordResetView):
-    email_template_name = 'users/password_reset_email.html'
+class PasswordResetView(auth_views.PasswordResetView):
     form_class = UserPasswordResetForm
-    subject_template_name = 'users/password_reset_subject.txt'
-    success_url = reverse_lazy('password_reset_done')
-    template_name = 'users/password_reset_form.html'
 
 
-class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    template_name = 'users/password_reset_complete.html'
-    title = 'Password reset complete'
+class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    pass
 
 
-class UserPasswordResetDoneView(auth_views.PasswordResetDoneView):
-    template_name = 'users/password_reset_done.html'
-    title = 'Password reset sent'
+class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+    pass
 
 
-class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    success_url = reverse_lazy('password_reset_complete')
-    template_name = 'users/password_reset_confirm.html'
-    title = 'Enter new password'
+class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    pass
 
 
 class AccountActivationSent(TemplateView):
-    template_name = 'users/account_activation_sent.html'
+    pass
 
 
 class SignupView(FormView):
     form_class = UserCreationForm
-    template_name = 'users/signup.html'
+    template_name = 'signup.html'
 
     def form_valid(self, form):
         if form.is_valid():
