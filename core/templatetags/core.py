@@ -22,6 +22,9 @@ def get_url(context, action, obj=None):
     app = model._meta.app_label
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if obj:
+        lower_name = obj.__class__.__name__.lower()
+        app = obj._meta.app_label
+        url_string = '{}:{}-{}'.format(app, lower_name, action)
         url = reverse_lazy(url_string, kwargs={'pk': obj.pk})
     if not obj:
         url_string = '{}:{}-{}'.format(app, lower_name, action)
