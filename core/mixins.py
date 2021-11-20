@@ -1,5 +1,7 @@
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.core import serializers
+from django.http import JsonResponse
 
 
 class ModelMixin:
@@ -21,6 +23,33 @@ class ModelMixin:
             title += ' Delete {}'.format(self.get_object())
         context['page_title'] = title
         return context
+
+
+
+class AjaxListMixin:
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        if request.is_ajax():
+            data = serializers.serialize("json", self.object_list)
+            return JsonResponse(data, safe=False)
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+
+class AjaxFormMixin:
+    def form_valid(self, form):
+        form.save()
+        if self.request.is_ajax():
+            data = serializers.serialize("json", [form.instance])
+            return JsonResponse(data, safe=False, status=200)
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, safe=False, status=400)
+        return super().form_invalid(form)
+
+
 
 
 class FormMixin:
