@@ -47,7 +47,7 @@ class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 
 class AccountActivationSent(TemplateView):
-    pass
+    template_name = 'registration/account_activation_sent.html'
 
 
 class SignupView(FormView):
