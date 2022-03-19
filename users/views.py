@@ -22,7 +22,6 @@ User = get_user_model()
 
 
 class LoginView(auth_views.LoginView):
-    template_name = 'login.html'
     form_class = UserAuthenticationForm
 
 
@@ -52,7 +51,7 @@ class AccountActivationSent(TemplateView):
 
 class SignupView(FormView):
     form_class = UserCreationForm
-    template_name = 'signup.html'
+    template_name = 'registration/signup.html'
 
     def form_valid(self, form):
         if form.is_valid():
@@ -64,7 +63,7 @@ class SignupView(FormView):
             user.profile.birth_date = form.cleaned_data.get('birth_date')
             user.save()
             subject = 'Activate Your MySite Account'
-            message = render_to_string('users/account_activation_email.html', {
+            message = render_to_string('registration/account_activation_email.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -87,6 +86,6 @@ def activate(request, uidb64, token):
         user.profile.email_confirmed = True
         user.save()
         login(request, user)
-        return redirect('home')
+        return redirect(settings.LOGIN_REDIRECT_URL)
     else:
-        return render(request, 'users/account_activation_invalid.html')
+        return render(request, 'registration/account_activation_invalid.html')
