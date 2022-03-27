@@ -9,6 +9,12 @@ class UserTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
+    def test_user_register_returns_correct_html(self):
+        sign_in_url = reverse('signup')
+        self.client.get(sign_in_url)
+        self.assertTemplateUsed('registration/signup.html')
+
+
     def test_user_register_invalid_date(self):
         data = {
             'birth_date': datetime.datetime.now(),
