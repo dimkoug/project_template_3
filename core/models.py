@@ -9,6 +9,13 @@ from django.core.files.storage import FileSystemStorage
 from uuslug import uuslug
 
 
+class Ordered(models.Model):
+    order = models.PositiveIntegerField(default=0,db_index=True)
+
+    class Meta:
+        abstract = True
+
+
 class Timestamped(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
