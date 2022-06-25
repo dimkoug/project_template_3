@@ -2,6 +2,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def get_pagination(request, queryset, items):
+    '''
+    items: The number for pagination
+
+    return tuple (paginator, total_pages, paginated queryset) 
+    '''
     paginator = Paginator(queryset, items)
     page = request.GET.get('page')
     try:
@@ -10,4 +15,4 @@ def get_pagination(request, queryset, items):
         items_page = paginator.page(1)
     except EmptyPage:
         items_page = paginator.page(paginator.num_pages)
-    return items_page
+    return (paginator, paginator.num_pages, items_page)
