@@ -17,14 +17,17 @@ def get_url(context, action, obj=None):
     app:model-delete
     app:model-detail
     '''
-    model = context['model']
-    lower_name = model.__name__.lower()
-    app = model._meta.app_label
+    if not obj:
+        model = context['model']
+        lower_name = model.__name__.lower()
+        app = model._meta.app_label
+    else:
+        model = obj
+        lower_name = model.__class__.__name__.lower()
+        app = model._meta.app_label
+
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if obj:
-        lower_name = obj.__class__.__name__.lower()
-        app = obj._meta.app_label
-        url_string = '{}:{}-{}'.format(app, lower_name, action)
         url = reverse_lazy(url_string, kwargs={'pk': obj.pk})
     if not obj:
         url_string = '{}:{}-{}'.format(app, lower_name, action)
