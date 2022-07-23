@@ -1,5 +1,8 @@
 from django import template
-from django.urls import reverse_lazy
+from django.urls import reverse,reverse_lazy, NoReverseMatch
+from django.apps import apps
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 register = template.Library()
 
 
@@ -42,3 +45,30 @@ def get_template_name(context, *args):
     lower_name = model.__name__.lower()
     template_name = "{}/partials/{}_list_partial.html".format(app,lower_name)
     return template_name
+
+@register.simple_tag(takes_context=True)
+def get_generate_sidebar(context):
+    request = context['request']
+    urls = ""
+    app_models = apps.get_app_config(context['app']).get_models()
+    for model in app_models:
+        try:
+            url_item = reverse(
+                "{}:{}-list".format(model._meta.app_label, model.__name__.lower()))
+        except NoReverseMatch:
+            url_item = None
+        if url_item:
+            item = "<div><a href='{}'".format(url_item)
+            if url_item == request.path:
+                item += "class='active'"
+            item += ">{}</a></div>".format(model._meta.verbose_name_plural)
+            print(item)
+            urls += item
+    return format_html(mark_safe(urls))
+
+
+@register.simple_tag
+def get_boolean_img(value):
+    if value:
+        return format_html(mark_safe('<i class="bi bi-check-lg"></i>'))
+    return format_html(mark_safe('<i class="bi bi-x"></i>'))
