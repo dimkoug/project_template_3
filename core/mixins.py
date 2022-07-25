@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.core import serializers
 from django.http import JsonResponse
@@ -7,23 +7,29 @@ from django.http import JsonResponse
 class ModelMixin:
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['app'] = self.model._meta.app_label
-        context['model'] = self.model
-        context['model_name'] = self.model.__name__.lower()
-        title = self.model.__name__.capitalize()
+        model = self.model
+        app = model._meta.app_label
+        model_name = model.__name__.lower()
+        context['app'] = app
+        context['model'] = model
+        context['model_name'] = model_name
+        title = model.meta.verbose_name.capitalize()
+        back_url = reverse("{}:{}-list".format(app, model_name))
+        context['back_url'] = back_url
         if 'List' in self.__class__.__name__:
-            title += ' List'
+            create_url = reverse("{}:{}-create".format(app, model_name))
+            context['create_url'] = create_url
+            title = model.meta.verbose_name_plural.capitalize()
         if 'Detail' in self.__class__.__name__:
-            title += ' Detail'
+            title = ' {} Detail'.format(self.get_object())
         if 'Create' in self.__class__.__name__:
             title += ' Create'
         if 'Update' in self.__class__.__name__:
-            title += ' Update {}'.format(self.get_object())
+            title = '{} Update'.format(self.get_object())
         if 'Delete' in self.__class__.__name__:
-            title += ' Delete {}'.format(self.get_object())
+            title = '{} Delete'.format(self.get_object())
         context['page_title'] = title
         return context
-
 
 
 class AjaxListMixin:
@@ -48,8 +54,6 @@ class AjaxFormMixin:
         if self.request.is_ajax():
             return JsonResponse(form.errors, safe=False, status=400)
         return super().form_invalid(form)
-
-
 
 
 class FormMixin:
