@@ -1,7 +1,11 @@
 six
 wheel
 pillow
+ipython
 mypy
+beautify
+autopep8
+pylint
 python-language-server
 flake8
 pylama
@@ -11,6 +15,7 @@ python-memcached
 gunicorn
 psycopg2-binary
 django
+pylint-django
 djangorestframework
 djangorestframework-simplejwt
 django-cors-headers
@@ -20,3 +25,11 @@ django-mptt
 django-debug-toolbar
 django-extensions
 django-admin-sortable2
+django-redis
+sorl-thumbnail
+anyjson
+celery
+django-celery
+django-redis-cache
+redis
+django-cache-machine
