@@ -1,13 +1,24 @@
 import uuid
-from django.db import models
 import os
 import hashlib
 import datetime
+from uuslug import uuslug
 from sorl.thumbnail import get_thumbnail
+from django.db import models
 from django.utils.html import format_html, mark_safe
 from django.core.files.storage import FileSystemStorage
-from uuslug import uuslug
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
+
+class UserData(models.Model):
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="%(app_label)s_%(class)s_user_created")
+    updated_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="%(app_label)s_%(class)s_user_updated")
+
+    class Meta:
+        abstract = True
 
 class Ordered(models.Model):
     order = models.PositiveIntegerField(default=0,db_index=True)
