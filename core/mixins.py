@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 from django.core import serializers
 from django.http import JsonResponse
 
+from .functions import create_query_string
+
 
 class ModelMixin:
     def get_context_data(self, *args, **kwargs):
@@ -29,6 +31,7 @@ class ModelMixin:
         if 'Delete' in self.__class__.__name__:
             title = '{} Delete'.format(self.get_object())
         context['page_title'] = title
+        context['query_string'] = create_query_string(self.request)
         return context
 
 
@@ -59,11 +62,13 @@ class AjaxFormMixin:
 class FormMixin:
     def form_valid(self, form):
         if 'continue' in self.request.POST:
+            form.save()
             return redirect(reverse_lazy('{}:{}-update'.format(
                 form.instance._meta.app_label,
                 form.instance.__class__.__name__.lower()),
                 kwargs={'pk': form.instance.pk}))
         if 'new' in self.request.POST:
+            form.save()
             return redirect(reverse_lazy('{}:{}-create'.format(
                 form.instance._meta.app_label,
                 form.instance.__class__.__name__.lower())))

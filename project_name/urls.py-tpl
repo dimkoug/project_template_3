@@ -21,10 +21,14 @@ from django.conf.urls.static import static
 from rest_framework.authtoken import views as api_views
 from rest_framework_simplejwt import views as jwt_views
 
+from core.utils import delete_item, model_order
+
 from .views import IndexView, ManageView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('delete/item/', delete_item, name='delete-item'),
+    path('model/order/', model_order, name='model-order'),
     path('manage/', ManageView.as_view(), name='manage'),
     path('users/', include('users.urls')),
     path('users/api/', include('users.api.routers')),
