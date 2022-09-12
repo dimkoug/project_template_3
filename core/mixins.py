@@ -12,24 +12,14 @@ class ModelMixin:
         model = self.model
         app = model._meta.app_label
         model_name = model.__name__.lower()
+        title = model.meta.verbose_name_plural.capitalize()
+        back_url = reverse("{}:{}-list".format(app, model_name))
+        create_url = reverse("{}:{}-create".format(app, model_name))
         context['app'] = app
         context['model'] = model
         context['model_name'] = model_name
-        title = model.meta.verbose_name.capitalize()
-        back_url = reverse("{}:{}-list".format(app, model_name))
         context['back_url'] = back_url
-        if 'List' in self.__class__.__name__:
-            create_url = reverse("{}:{}-create".format(app, model_name))
-            context['create_url'] = create_url
-            title = model.meta.verbose_name_plural.capitalize()
-        if 'Detail' in self.__class__.__name__:
-            title = ' {} Detail'.format(self.get_object())
-        if 'Create' in self.__class__.__name__:
-            title += ' Create'
-        if 'Update' in self.__class__.__name__:
-            title = '{} Update'.format(self.get_object())
-        if 'Delete' in self.__class__.__name__:
-            title = '{} Delete'.format(self.get_object())
+        context['create_url'] = create_url
         context['page_title'] = title
         context['query_string'] = create_query_string(self.request)
         return context
