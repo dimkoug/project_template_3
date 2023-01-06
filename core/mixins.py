@@ -1,9 +1,30 @@
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
+from django.db.models import Q
 from django.core import serializers
 from django.http import JsonResponse
 
 from .functions import create_query_string
+
+
+class QueryListMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        q_objects = Q()
+        if q and q != '':
+            q = str(q.strip())
+            for f in  self.model._meta.get_fields():
+                print(f.__class__.__name__)
+                if f.__class__.__name__  in ['CharField', 'TextField']:
+                    str_q = f"Q({f.name}__icontains='{to_str(q)}')"
+                    print(str_q)
+                    q_obj = eval(str_q)
+                    print(q_obj)
+                    q_objects |= q_obj
+            queryset = queryset.filter(q_objects)
+        return queryset
+
 
 
 class ModelMixin:
