@@ -1,3 +1,6 @@
+ujson
+ijson
+babel
 six
 wheel
 pillow
