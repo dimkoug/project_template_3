@@ -37,3 +37,4 @@ django-redis-cache
 redis
 django-cache-machine
 scrapy
+scrapy-djangoitem

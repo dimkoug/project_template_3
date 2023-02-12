@@ -10,7 +10,6 @@ User = get_user_model()
 
 from .serializers import (
     UserSerializer, GroupSerializer,
-    RegisterSerializer
 )
 
 
@@ -27,7 +26,7 @@ def current_user(request):
 
 
 class RegisterApi(generics.GenericAPIView):
-    serializer_class = RegisterSerializer
+    serializer_class = UserSerializer
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)

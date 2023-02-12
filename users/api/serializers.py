@@ -2,10 +2,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 
+from rest_framework_simplejwt.tokens import RefreshToken
+
 User = get_user_model()
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','username','password','email', 'first_name', 'last_name')
@@ -24,12 +26,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializerWithToken(UserSerializer):
+    token = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ('id','username','password','email', 'first_name', 'last_name', 'token')
+        extra_kwargs = {
+            'password':{'write_only': True},
+        }
+
+    def get_token(self,obj):
+        token = RefreshToken.for_user(obj)
+        return str(token.access_token)
+
+
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
