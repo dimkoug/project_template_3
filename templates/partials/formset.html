@@ -30,7 +30,6 @@
                   {% endif %}
                   {{ field.errors }}
                 </div>
-               
             {% endfor %}
             <div class="col">
               {% if formset.formset.can_delete %}
@@ -42,11 +41,11 @@
       <script type="text/javascript">
           $(document).ready(function(){
             $('.formset_row-{{ formset.formset.prefix }}').formset({
-                addText: 'add another',
-                deleteText: 'remove',
+                addText: '<i class="bi bi-plus-square-fill text-primary" style="font-size:2rem;"></i>',
+                deleteText: '<i class="bi bi-x text-danger" style="font-size:2rem;"></i>',
                 prefix: '{{ formset.formset.prefix }}',
-                deleteCssClass: 'btn btn-danger col-2',
-                addCssClass: 'btn btn-primary formset_add_button'
+                deleteCssClass: 'col-2 delete',
+                addCssClass: 'formset_add_button'
             });
             $('.formset_add_button').click(function(e){
               var $allLinks = $("select").hasClass(".select2-hidden-accessible");

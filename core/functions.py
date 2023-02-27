@@ -40,6 +40,17 @@ def create_query_string(request):
     return query_string
 
 
+def get_sb_data(queryset, q_objects):
+    d_objects = []
+    queryset = queryset.filter(q_objects)
+    for d in queryset:
+        d_objects.append({
+            "id": d.pk,
+            "text": d.__str__()
+        })
+    return JsonResponse({"results": d_objects}, safe=False)
+
+
 def get_select_2_data(request):
     model_str = request.GET.get('model')
     app_str = request.GET.get('app')
