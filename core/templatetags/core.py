@@ -77,7 +77,11 @@ def get_boolean_img(value):
 @register.simple_tag
 def get_model_name(obj):
     if obj:
-        return obj.__class__.name__.lower()
+        try:
+            return obj.__class__.name__.lower()
+        except:
+            return obj.__name__.lower()
+
     return ''
 
 
