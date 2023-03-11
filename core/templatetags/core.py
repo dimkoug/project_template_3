@@ -78,7 +78,7 @@ def get_boolean_img(value):
 def get_model_name(obj):
     if obj:
         try:
-            return obj.__class__.name__.lower()
+            return obj.__class__.__name__.lower()
         except:
             return obj.__name__.lower()
 
