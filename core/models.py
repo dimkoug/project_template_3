@@ -3,6 +3,7 @@ import os
 import hashlib
 import datetime
 from uuslug import uuslug
+from urllib.parse import unquote
 from sorl.thumbnail import get_thumbnail
 from django.db import models
 from django.utils.html import format_html, mark_safe
@@ -19,6 +20,16 @@ class UserData(models.Model):
 
     class Meta:
         abstract = True
+
+
+class UnicodeUrl(models.Model):
+    class Meta:
+        abstract = True
+
+    def get_unicode_url(self):
+        url = self.get_absolute_url()
+        return unquote(url)
+
 
 class Ordered(models.Model):
     order = models.PositiveIntegerField(default=0,db_index=True)

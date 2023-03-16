@@ -1,5 +1,5 @@
 from django import template
-from django.urls import reverse,reverse_lazy, NoReverseMatch
+from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
 from django.apps import apps
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -77,7 +77,11 @@ def get_boolean_img(value):
 @register.simple_tag
 def get_model_name(obj):
     if obj:
-        return obj.__class__.name__.lower()
+        try:
+            return obj.__class__.__name__.lower()
+        except:
+            return obj.__name__.lower()
+
     return ''
 
 
@@ -85,4 +89,18 @@ def get_model_name(obj):
 def get_model_app(obj):
     if obj:
         return obj._meta.app_label
+    return ''
+
+
+@register.simple_tag
+def get_formset_img(obj, value):
+    if value.__class__.__name__ == 'ImageFieldFile' and value:
+        return format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
+    return ""
+
+
+@register.simple_tag
+def is_active(request , url):
+    if  resolve(request.path).url_name == url:
+        return 'active'
     return ''

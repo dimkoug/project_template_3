@@ -1,0 +1,86 @@
+{% load core %}
+  {{ formset.formset.management_form }}
+  {{formset.formset.non_form_errors}}
+  <div class="row py-2">
+    <div class="col">
+      <h2>{{formset.title}}</h2>
+    </div>
+  </div>
+  <div class="row py-2">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+  <div class="row py-2">
+    <div class="col">
+      {% for form in formset.formset %}
+          <div class="row py-2 formset_row-{{ formset.formset.prefix }} py-2">
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                <div class="col">
+                <label for="{{field.id_for_label}}">{{field.label}}</label>
+                </div>
+                <div class="col">
+                  {{field}}
+                  {% get_formset_img field field.value %}
+                  {% if field.help_text %}
+                  <small id="{{field.id_for_label}}" class="form-text text-muted">{{field.help_text}}</small>
+                  {% endif %}
+                  {{ field.errors }}
+                </div>
+            {% endfor %}
+            <div class="col">
+              {% if formset.formset.can_delete %}
+                  {{ form.DELETE }}
+              {% endif %}
+            </div>
+          </div>
+      {% endfor %}
+      <script type="text/javascript">
+          $(document).ready(function(){
+            $('.formset_row-{{ formset.formset.prefix }}').formset({
+                addText: '<i class="bi bi-plus-square-fill text-primary" style="font-size:2rem;"></i>',
+                deleteText: '<i class="bi bi-x text-danger" style="font-size:2rem;"></i>',
+                prefix: '{{ formset.formset.prefix }}',
+                deleteCssClass: 'col-2 delete',
+                addCssClass: 'formset_add_button'
+            });
+            $('.formset_add_button').click(function(e){
+              var $allLinks = $("select").hasClass(".select2-hidden-accessible");
+              for(item in $allLinks){
+                item.select2('destroy');
+              }
+              $("select[name*='{{ formset.formset.prefix }}']" ).select2({
+                ajax: {
+                  url: '{{formset.sb_url}}',
+                  data: function (params) {
+                    var query = {
+                      search: params.term,
+                      type: 'public'
+                    }
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                  }
+                }
+              });
+            })
+            $("select[name*='{{ formset.formset.prefix }}']" ).select2({
+              ajax: {
+                url: '{{formset.sb_url}}',
+                data: function (params) {
+                  var query = {
+                    search: params.term,
+                    type: 'public'
+                  }
+                  // Query parameters will be ?search=[term]&type=public
+                  return query;
+                }
+              }
+            });
+          })
+      </script>
+  </div>
+
+</div>

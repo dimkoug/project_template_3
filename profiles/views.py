@@ -1,9 +1,13 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
 # Create your views here.
 
 from .forms import ProfileForm
@@ -22,6 +26,12 @@ class ProfileDetailView(ProtectProfile, LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        uuid = urlsafe_base64_encode(force_bytes(self.get_object().pk))
+        token = default_token_generator.make_token(self.get_object().user)
+        url = self.request.build_absolute_uri(reverse(
+                        "password_reset_confirm",
+                        kwargs={"uidb64": uuid, "token": token}))
+        context['password_url'] = url
         return context
 
 

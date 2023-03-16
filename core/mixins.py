@@ -1,9 +1,31 @@
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
+from django.db.models import Q
 from django.core import serializers
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
-from .functions import create_query_string
+from .functions import create_query_string, is_ajax
+
+
+class QueryListMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        q_objects = Q()
+        if q and q != '':
+            q = str(q.strip())
+            for f in  self.model._meta.get_fields():
+                print(f.__class__.__name__)
+                if f.__class__.__name__  in ['CharField', 'TextField']:
+                    str_q = f"Q({f.name}__icontains='{q}')"
+                    print(str_q)
+                    q_obj = eval(str_q)
+                    print(q_obj)
+                    q_objects |= q_obj
+            queryset = queryset.filter(q_objects)
+        return queryset
+
 
 
 class ModelMixin:
@@ -28,7 +50,7 @@ class ModelMixin:
 class AjaxListMixin:
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
-        if request.is_ajax():
+        if is_ajax(request):
             data = serializers.serialize("json", self.object_list)
             return JsonResponse(data, safe=False)
         context = self.get_context_data()
@@ -38,7 +60,7 @@ class AjaxListMixin:
 class AjaxFormMixin:
     def form_valid(self, form):
         form.save()
-        if self.request.is_ajax():
+        if is_ajax(self.request):
             data = serializers.serialize("json", [form.instance])
             return JsonResponse(data, safe=False, status=200)
         return super().form_valid(form)
@@ -103,3 +125,29 @@ class PaginationMixin:
 
         context.update({'pages': pages})
         return context
+
+
+class AjaxDeleteMixin:
+    def dispatch(self, *args, **kwargs):
+        self.app = self.model._meta.app_label
+        self.model_name = self.model.__name__.lower()
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        if is_ajax(self.request):
+            self.object = self.get_object()
+            self.object.delete()
+            data = dict()
+            data['form_is_valid'] = True
+            return JsonResponse(data)
+        else:
+            return self.delete(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data()
+        if is_ajax(request):
+            html_form = render_to_string(
+                self.ajax_partial, context, request)
+            return JsonResponse({'html_form': html_form})
+        return super().get(request, *args, **kwargs)
