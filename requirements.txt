@@ -23,6 +23,7 @@ django
 pylint-django
 djangorestframework
 djangorestframework-simplejwt
+djangorestframework-datatables
 django-cors-headers
 django-filter
 django-uuslug
