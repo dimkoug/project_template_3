@@ -34,7 +34,7 @@ class ModelMixin:
         model = self.model
         app = model._meta.app_label
         model_name = model.__name__.lower()
-        title = model.meta.verbose_name_plural.capitalize()
+        title = model._meta.verbose_name_plural.capitalize()
         back_url = reverse("{}:{}-list".format(app, model_name))
         create_url = reverse("{}:{}-create".format(app, model_name))
         context['app'] = app
