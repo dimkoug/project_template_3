@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django import template
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
 from django.apps import apps
@@ -104,3 +105,22 @@ def is_active(request , url):
     if  resolve(request.path).url_name == url:
         return 'active'
     return ''
+
+
+
+@register.simple_tag
+def get_rows(fields, object_list):
+    trs = []
+    for obj in object_list:
+        tr = '<tr>'
+        for field in fields:
+            value = getattr(obj, field)
+            if isinstance(value, Decimal):
+                value = round(value,0)
+            tr += '<td>' + str(value) + '</td>'
+        tr += '</tr>'
+        trs.append(tr)
+    items = ''
+    for i in trs:
+        items += str(i)
+    return format_html(mark_safe(items))
