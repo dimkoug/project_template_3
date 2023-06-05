@@ -18,7 +18,7 @@ pylama-pylint
 sorl-thumbnail
 python-memcached
 gunicorn
-psycopg2-binary
+psycopg
 django
 pylint-django
 djangorestframework
@@ -33,7 +33,6 @@ django-extensions
 django-admin-sortable2
 django-redis
 sorl-thumbnail
-anyjson
 celery
 django-celery
 django-redis-cache
