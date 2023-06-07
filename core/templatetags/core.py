@@ -32,7 +32,10 @@ def get_url(context, action, obj=None):
 
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if obj:
-        url = reverse_lazy(url_string, kwargs={'pk': obj.pk})
+       try:
+           url = reverse(url_string, kwargs={'pk': obj.pk})
+       except NoReverseMatch:
+           url = reverse(url_string, kwargs={'slug': obj.slug})
     if not obj:
         url_string = '{}:{}-{}'.format(app, lower_name, action)
         url = reverse_lazy(url_string)
