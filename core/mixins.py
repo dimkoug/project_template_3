@@ -7,6 +7,29 @@ from django.template.loader import render_to_string
 
 from .functions import create_query_string, is_ajax
 
+class AjaxMixin:
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except:
+            self.object_list = self.get_queryset()
+        context = self.get_context_data(**kwargs)
+        class_name = self.__class__.__name__.lower()
+        if 'list' in class_name:
+            name = '_list_partial.html'
+        elif 'detail' in class_name:
+            name = '_detail_partial.html'
+        elif 'delete' in class_name:
+            name = '_confirim_delete_partial.html'
+        print(name)
+        self.ajax_partial = f"{self.model._meta.app_label}/partials/{self.model.__name__.lower()}{name}"
+        context['template'] = self.ajax_partial
+        if is_ajax(request):
+            print(self.ajax_partial)
+            template = render_to_string(
+                self.ajax_partial, context, request)
+            return JsonResponse({'template': template})
+        return self.render_to_response(context)
 
 class QueryListMixin:
     def get_queryset(self):
