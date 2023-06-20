@@ -45,9 +45,9 @@ def get_url(context, action, obj=None):
 @register.simple_tag(takes_context=True)
 def get_template_name(context, *args):
     model = context['model']
+    template_name = context['template']
     app = model._meta.app_label
-    lower_name = model.__name__.lower()
-    template_name = "{}/partials/{}_list_partial.html".format(app,lower_name)
+    template_name = f"{app}/partials/{template_name}"
     return template_name
 
 @register.simple_tag(takes_context=True)
