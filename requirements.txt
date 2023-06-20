@@ -1,4 +1,8 @@
 pandas
+jupyter
+bottleneck
+numexpr
+matplotlib
 numpy
 ujson
 ijson
@@ -19,6 +23,7 @@ sorl-thumbnail
 python-memcached
 gunicorn
 psycopg
+psycop2-binary
 django
 pylint-django
 djangorestframework
