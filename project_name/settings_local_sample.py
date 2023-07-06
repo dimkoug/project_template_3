@@ -107,8 +107,10 @@ CACHES = {
 
 
 try:
+     # configure based on your env configuration
     if os.name == 'nt':
         os.environ['PATH'] = os.path.join(VIRTUAL_ENV_DIR, r'.\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
         os.environ['PROJ_LIB'] = os.path.join(VIRTUAL_ENV_DIR, r'.\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
+        GDAL_LIBRARY_PATH = os.path.join(VIRTUAL_ENV_DIR, r'.\Lib\site-packages\osgeo\gdal304.dll')
 except:
     pass
