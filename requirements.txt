@@ -22,8 +22,7 @@ pylama-pylint
 sorl-thumbnail
 python-memcached
 gunicorn
-psycopg
-psycopg2-binary
+psycopg[binary]
 django
 pylint-django
 djangorestframework
