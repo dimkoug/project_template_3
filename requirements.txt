@@ -7,6 +7,7 @@ asgiref
 astroid
 asttokens
 async-lru
+async-timeout
 attrs
 Automat
 autopep8
@@ -49,19 +50,20 @@ django-filter
 django-js-asset
 django-mptt
 django-redis
-django-redis-cache
 django-rest-swagger
 django-uuslug
 djangorestframework
 djangorestframework-datatables
 djangorestframework-simplejwt
 djangrestframework
+exceptiongroup
 executing
 fastjsonschema
 filelock
 flake8
 fonttools
 fqdn
+GDAL @ file:///C:/Users/U779/projects/webscrapper/GDAL-3.4.3-cp310-cp310-win_amd64.whl#sha256=9893da5532a6c5dadc1fc3bc402ae29d161b7cf190d778f129da84d0e50baa29
 gunicorn
 hyperlink
 idna
@@ -99,6 +101,7 @@ jupyterlab-widgets
 jupyterlab_server
 kiwisolver
 kombu
+lazy-object-proxy
 lxml
 MarkupSafe
 matplotlib
@@ -134,6 +137,7 @@ Protego
 psutil
 psycopg
 psycopg-binary
+psycopg2
 pure-eval
 pyasn1
 pyasn1-modules
@@ -156,6 +160,7 @@ python-json-logger
 python-jsonrpc-server
 python-language-server
 python-memcached
+python-scrapyd-api
 python-slugify
 pytz
 pywin32
@@ -177,9 +182,9 @@ scikit-learn
 scipy
 Scrapy
 scrapy-djangoitem
+scrapyd
 Send2Trash
 service-identity
-setuptools
 simplejson
 six
 sniffio
@@ -193,6 +198,7 @@ text-unidecode
 threadpoolctl
 tinycss2
 tldextract
+tomli
 tomlkit
 tornado
 tqdm
@@ -212,8 +218,9 @@ wcwidth
 webcolors
 webencodings
 websocket-client
-wheel
 widgetsnbextension
+wrapt
 zope.interface
+
 
 
