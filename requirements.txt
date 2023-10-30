@@ -63,7 +63,6 @@ filelock
 flake8
 fonttools
 fqdn
-GDAL @ file:///C:/Users/U779/projects/webscrapper/GDAL-3.4.3-cp310-cp310-win_amd64.whl#sha256=9893da5532a6c5dadc1fc3bc402ae29d161b7cf190d778f129da84d0e50baa29
 gunicorn
 hyperlink
 idna
