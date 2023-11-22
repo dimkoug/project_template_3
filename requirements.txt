@@ -220,6 +220,7 @@ websocket-client
 widgetsnbextension
 wrapt
 zope.interface
+cached-property
 
 
 
