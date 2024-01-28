@@ -50,11 +50,17 @@ def get_template_name(context, *args):
     template_name = f"{app}/partials/{template_name}"
     return template_name
 
+def sortFn(value):
+  return value.__name__
+
+
 @register.simple_tag(takes_context=True)
 def get_generate_sidebar(context):
     request = context['request']
     urls = ""
-    app_models = apps.get_app_config(context['app']).get_models()
+    app_models = list(apps.get_app_config(context['app']).get_models())
+    app_models.sort(key=sortFn)
+    
     for model in app_models:
         try:
             url_item = reverse(
@@ -65,7 +71,7 @@ def get_generate_sidebar(context):
             item = "<div><a href='{}'".format(url_item)
             if url_item == request.path:
                 item += "class='active'"
-            item += ">{}</a></div>".format(model._meta.verbose_name_plural)
+            item += ">{}</a></div>".format(model._meta.verbose_name_plural.capitalize())
             print(item)
             urls += item
     return format_html(mark_safe(urls))
