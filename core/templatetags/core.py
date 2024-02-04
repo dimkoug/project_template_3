@@ -2,6 +2,7 @@ from decimal import Decimal
 from django import template
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
 from django.apps import apps
+from django.db.models.fields.files import ImageFieldFile, FileField
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 register = template.Library()
@@ -121,12 +122,28 @@ def is_active(request , url):
 def get_rows(fields, object_list):
     trs = []
     for obj in object_list:
+        app = obj._meta.app_label
+        model = obj.__class__.__name__.lower()
+        update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
+        delete_url = reverse_lazy(f"{app}:{model}-delete",kwargs={"pk":obj.pk})
         tr = '<tr>'
         for field in fields:
-            value = getattr(obj, field)
+            db_name = field['db_name']
+            value = getattr(obj, db_name)
+            print(value.__class__.__name__)
             if isinstance(value, Decimal):
                 value = round(value,0)
+            if isinstance(value, bool):
+                if value:
+                    value = format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
+                else:
+                    value = format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
+            if isinstance(value,ImageFieldFile):
+                if value and value.url:
+                    value = format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
             tr += '<td>' + str(value) + '</td>'
+        tr += f"""<td><a href='{update_url}'>{format_html(mark_safe('<i class="bi bi-pencil-square text-warning" style="font-size:1.5rem;"></i>'))}</a><a href='{delete_url}        'class='delete-tr'>{format_html(mark_safe('<i class="bi bi-x text-danger" style="font-size:1.5rem;"></i>'))}</a></td>"""
+        
         tr += '</tr>'
         trs.append(tr)
     items = ''
