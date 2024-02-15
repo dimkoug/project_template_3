@@ -7,4 +7,4 @@ class IndexView(TemplateView):
 
 
 class ManageView(LoginRequiredMixin, TemplateView):
-    template_name = "cms/manage.html"
+    template_name = "cms/index.html"
