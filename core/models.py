@@ -4,7 +4,6 @@ import hashlib
 import datetime
 from uuslug import uuslug
 from urllib.parse import unquote
-from sorl.thumbnail import get_thumbnail
 from django.db import models
 from django.utils.html import format_html, mark_safe
 from django.core.files.storage import FileSystemStorage
@@ -129,9 +128,7 @@ class Media(models.Model):
     def filename(self):
         return os.path.basename(self.image.name)
 
-    def get_thumbnails(self):
-        im = get_thumbnail(self.image, 'x500', quality=99)
-        return im.url
+
 
     def get_thumb(self):
         if self.image:

@@ -150,3 +150,27 @@ def get_rows(fields, object_list):
     for i in trs:
         items += str(i)
     return format_html(mark_safe(items))
+
+
+@register.inclusion_tag("core/add_button.html",takes_context=True)
+def add_button(context):
+    view = context["view"]
+    model = view.model
+    url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-create")
+    return {"url":url}
+
+
+@register.inclusion_tag("core/title.html",takes_context=True)
+def get_title(context):
+    view = context["view"]
+    model = view.model
+    return {"title":model._meta.verbose_name_plural.capitalize()}
+
+
+@register.inclusion_tag("core/actions.html",takes_context=True)
+def get_actions(context, obj):
+    view = context["view"]
+    model = view.model
+    change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
+    delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
+    return {"change_url":change_url,"delete_url":delete_url}

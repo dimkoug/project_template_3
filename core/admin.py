@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from sorl.thumbnail import get_thumbnail
 from .actions import make_draft, make_published
 from .forms import AdminImageWidget
 
@@ -20,8 +19,7 @@ class ImageAdminMixin(object):
 class BaseAdmin(ImageAdminMixin, admin.ModelAdmin):
     def admin_thumbnail(self):
         if(self.image):
-            t = get_thumbnail(self.image,'90x90')
-            return format_html('<img src="{}">'.format(t.url))
+            return format_html('<img src="{}">'.format(self.image.url))
         return ""
     admin_thumbnail.short_description = 'Thumbnail'
     admin_thumbnail.allow_tags = True
