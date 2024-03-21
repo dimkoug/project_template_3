@@ -174,3 +174,30 @@ def get_actions(context, obj):
     change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
     delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
     return {"change_url":change_url,"delete_url":delete_url}
+
+
+@register.simple_tag
+def get_list_url(form):
+    model = form.instance
+    list_url = reverse(f"{model._meta.app_label}:{model.__class__.__name__.lower()}-list")
+    return list_url
+
+
+@register.simple_tag(takes_context=True)
+def get_change_url(context, obj):
+    view = context["view"]
+    model = view.model
+    change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
+    delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
+    return change_url
+
+@register.simple_tag
+def get_delete_url(form):
+    model = form.instance
+    delete_url = reverse(f"{model._meta.app_label}:{model.__class__.__name__.lower()}-delete",kwargs={"pk":form.instance.pk})
+    return delete_url
+
+
+@register.inclusion_tag("core/form_buttons.html",takes_context=True)
+def get_form_buttons(context, form):
+    return {"form":form, "context":context}

@@ -8,6 +8,22 @@ from core.functions import get_rows
 
 from .functions import create_query_string, is_ajax
 
+
+class FormInvalidMixin:
+    def form_invalid(self, form, **kwargs):
+        from django.contrib import messages
+        messages.error(self.request, f"{self.model.__name__.capitalize()} not saved.")
+        for field in form.errors:
+            try:
+                form[field].field.widget.attrs['class'] += ' is-invalid'
+            except KeyError:
+                form[field].field.widget.attrs['class'] = ' is-invalid'
+        if is_ajax(self.request):
+            return JsonResponse(form.errors, safe=False, status=400)
+        return super().form_invalid(form)
+
+
+
 class AjaxMixin:
     def get(self, request, *args, **kwargs):
         try:
@@ -89,10 +105,20 @@ class AjaxFormMixin:
             return JsonResponse(data, safe=False, status=200)
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        if self.request.is_ajax():
+    def form_invalid(self, form, **kwargs):
+        from django.contrib import messages
+        messages.error(self.request, f"{self.model.__name__.capitalize()} not saved.")
+        for field in form.errors:
+            try:
+                form[field].field.widget.attrs['class'] += ' is-invalid'
+            except KeyError:
+                form[field].field.widget.attrs['class'] = ' is-invalid'
+        if is_ajax(self.request):
             return JsonResponse(form.errors, safe=False, status=400)
         return super().form_invalid(form)
+    
+
+
 
 
 class FormMixin:
@@ -111,8 +137,15 @@ class FormMixin:
         return super().form_valid(form)
 
     def form_invalid(self, form, **kwargs):
+        from django.contrib import messages
+        messages.error(self.request, f"{self.model.__name__.capitalize()} not saved.")
         for field in form.errors:
-            form[field].field.widget.attrs['class'] += ' is-invalid'
+            try:
+                form[field].field.widget.attrs['class'] += ' is-invalid'
+            except KeyError:
+                form[field].field.widget.attrs['class'] = ' is-invalid'
+        if is_ajax(self.request):
+            return JsonResponse(form.errors, safe=False, status=400)
         return super().form_invalid(form)
 
 
