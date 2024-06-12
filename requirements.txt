@@ -4,7 +4,6 @@ anyio
 argon2-cffi
 argon2-cffi-bindings
 arrow
-asgiref
 astroid
 asttokens
 async-lru
@@ -258,7 +257,6 @@ social-auth-app-django
 social-auth-core
 sorl-thumbnail
 soupsieve
-sqlparse
 stack-data
 starkbank-ecdsa
 terminado
@@ -274,8 +272,6 @@ traitlets
 Twisted
 twisted-iocpsupport
 types-python-dateutil
-typing_extensions
-tzdata
 ujson
 Unidecode
 uri-template
