@@ -183,10 +183,7 @@ prometheus_client
 prompt_toolkit
 Protego
 psutil
-psycopg
-psycopg-binary
-psycopg-pool
-psycopg2
+psycopg[binary,pool]
 pure-eval
 pyasn1
 pyasn1_modules
@@ -295,3 +292,4 @@ XlsxWriter
 xmltodict
 zipp
 zope.interface
+
