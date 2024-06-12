@@ -52,7 +52,6 @@ dicttoxml
 dill
 Django
 django-admin-sortable2
-django-cachalot
 django-cache-machine
 django-cache-memoize
 django-celery-beat
