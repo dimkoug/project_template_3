@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'rest_framework',
     'rest_framework.authtoken',
+    'webpack_loader',
     'django_filters',
     'sorl.thumbnail',
     'mptt',
@@ -166,6 +167,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(PUBLIC_DIR, "static")
+
+
+# Use the Webpack Bundle Tracker file
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'dist/',  # end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'static','dist', 'webpack-stats.json'),
+    }
+}
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PUBLIC_DIR, "media")
