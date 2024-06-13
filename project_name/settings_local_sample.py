@@ -9,6 +9,21 @@ This file is used to create a local settings_local.py file for development
 
 DEBUG = True
 
+DJANGO_DEVELOPMENT = True
+
+
+if DJANGO_DEVELOPMENT:
+    # In development, use the Webpack dev server
+    WEBPACK_DEV_SERVER = 'http://localhost:9000/static/dist/'
+    STATICFILES_DIRS = [
+        BASE_DIR / "static/dist",
+    ]
+else:
+    # In production, use the collected static files
+    #print(os.getenv('DJANGO_DEVELOPMENT'))
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    WEBPACK_DEV_SERVER = STATIC_URL + 'dist/'
+
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
 ]
