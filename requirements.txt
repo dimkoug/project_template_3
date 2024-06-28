@@ -295,3 +295,4 @@ XlsxWriter
 xmltodict
 zipp
 zope.interface
+SQLAlchemy
