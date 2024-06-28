@@ -176,10 +176,15 @@ def get_actions(context, obj):
     return {"change_url":change_url,"delete_url":delete_url}
 
 
-@register.simple_tag
-def get_list_url(form):
-    model = form.instance
-    list_url = reverse(f"{model._meta.app_label}:{model.__class__.__name__.lower()}-list")
+@register.simple_tag(takes_context=True)
+def get_list_url(context, form):
+    try:
+        model = form.instance
+        list_url = reverse(f"{model._meta.app_label}:{model.__class__.__name__.lower()}-list")
+    except:
+        model = context['view'].model
+        list_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-list")
+    
     return list_url
 
 

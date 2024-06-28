@@ -49,10 +49,20 @@ def create_query_string(request):
     return query_string
 
 
-def get_sb_data(queryset, q_objects):
+def get_sb_data(request, model):
+    q_objects = Q()
     d_objects = []
-    queryset = queryset.filter(q_objects)
-    for d in queryset:
+    search = request.GET.get('search')
+    if search and search != '':
+        for f in  model._meta.get_fields():
+            if f.__class__.__name__  in ['CharField', 'TextField']:
+                str_q = f"Q({f.name}__icontains=str('{search}'))"
+                q_obj = eval(str_q)
+                q_objects |= q_obj
+        data = model.objects.filter(q_objects)
+    else:
+        data = model.objects.all()
+    for d in data:
         d_objects.append({
             "id": d.pk,
             "text": d.__str__()
