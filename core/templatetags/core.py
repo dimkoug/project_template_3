@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from django import template
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
@@ -206,3 +207,21 @@ def get_delete_url(form):
 @register.inclusion_tag("core/form_buttons.html",takes_context=True)
 def get_form_buttons(context, form):
     return {"form":form, "context":context}
+
+
+@register.simple_tag
+def display_data(object):
+    items = {}
+    for field in object._meta.fields:
+        print(type(field), field.name)
+        value = getattr(object,field.name)
+        if isinstance(value, Decimal):
+            value = round(value,0)
+        if isinstance(value, datetime.datetime):
+            format = '%Y-%m-%d %H:%M:%S'
+            print(format)
+            # applying strftime() to format the datetime
+            string = value.strftime(format)
+            value = str(string)
+        items[field.name] = value
+    return items
