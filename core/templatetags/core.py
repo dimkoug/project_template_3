@@ -10,7 +10,7 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def get_url(context, action, obj=None):
+def get_url(context, action, obj=None, app=None):
     '''
     example 1  " get_url 'list' "
     example 2  " get_url 'create' "
@@ -26,11 +26,13 @@ def get_url(context, action, obj=None):
     if not obj:
         model = context['model']
         lower_name = model.__name__.lower()
-        app = model._meta.app_label
+        if not app:
+            app = model._meta.app_label
     else:
         model = obj
         lower_name = model.__class__.__name__.lower()
-        app = model._meta.app_label
+        if not app:
+            app = model._meta.app_label
 
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if obj:
@@ -45,12 +47,10 @@ def get_url(context, action, obj=None):
 
 
 @register.simple_tag(takes_context=True)
-def get_template_name(context, *args):
-    model = context['model']
+def get_template_name(context, app=None):
     template_name = context['template']
-    app = model._meta.app_label
-    template_name = f"{app}/partials/{template_name}"
     return template_name
+
 
 def sortFn(value):
   return value.__name__
@@ -154,10 +154,13 @@ def get_rows(fields, object_list):
 
 
 @register.inclusion_tag("core/add_button.html",takes_context=True)
-def add_button(context):
+def add_button(context, app=None):
     view = context["view"]
     model = view.model
-    url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-create")
+    if not app:
+        app = model._meta.app_label
+    
+    url = reverse(f"{app}:{model.__name__.lower()}-create")
     return {"url":url}
 
 
@@ -169,23 +172,29 @@ def get_title(context):
 
 
 @register.inclusion_tag("core/actions.html",takes_context=True)
-def get_actions(context, obj):
+def get_actions(context, obj, app=None):
     view = context["view"]
     model = view.model
-    change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
-    delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
+    if not app:
+        app = model._meta.app_label
+    change_url = reverse(f"{app}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
+    delete_url = reverse(f"{app}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
     return {"change_url":change_url,"delete_url":delete_url}
 
 
 @register.simple_tag(takes_context=True)
-def get_list_url(context, form):
+def get_list_url(context, form, app=None):
     try:
         model = form.instance
-        list_url = reverse(f"{model._meta.app_label}:{model.__class__.__name__.lower()}-list")
+        if not app:
+            app = model._meta.app_label
+        list_url = reverse(f"{app}:{model.__class__.__name__.lower()}-list")
     except:
-        model = context['view'].model
-        list_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-list")
-    
+        if not app:
+            model = context['view'].model
+            app = model._meta.app_label
+        
+        list_url = reverse(f"{app}:{model.__name__.lower()}-list")
     return list_url
 
 
@@ -198,9 +207,11 @@ def get_change_url(context, obj):
     return change_url
 
 @register.simple_tag
-def get_delete_url(form):
+def get_delete_url(form, app=None):
     model = form.instance
-    delete_url = reverse(f"{model._meta.app_label}:{model.__class__.__name__.lower()}-delete",kwargs={"pk":form.instance.pk})
+    if not app:
+        app = model._meta.app_label
+    delete_url = reverse(f"{app}:{model.__class__.__name__.lower()}-delete",kwargs={"pk":form.instance.pk})
     return delete_url
 
 

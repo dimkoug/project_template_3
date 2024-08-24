@@ -1,10 +1,12 @@
 adal
 amqp
 anyio
+arabic-reshaper
 argon2-cffi
 argon2-cffi-bindings
 arrow
 asgiref
+asn1crypto
 astroid
 asttokens
 async-lru
@@ -15,7 +17,7 @@ autopep8
 azure-common
 azure-nspkg
 azure-servicemanagement-legacy
-Babel
+babel
 backcall
 bcrypt
 beautifulsoup4
@@ -43,6 +45,7 @@ coreschema
 cron-descriptor
 cryptography
 cssselect
+cssselect2
 curlify
 cycler
 debugpy
@@ -103,6 +106,7 @@ future
 greenlet
 gunicorn
 h11
+html5lib
 httpcore
 httplib2
 httpx
@@ -170,6 +174,7 @@ oauth2
 oauthlib
 openapi-codec
 openpyxl
+oscrypto
 outcome
 overrides
 packaging
@@ -202,6 +207,8 @@ pydocstyle
 pydotplus
 pyflakes
 Pygments
+pyHanko
+pyhanko-certvalidator
 PyJWT
 pylama
 pylama-pylint
@@ -213,9 +220,12 @@ PyNaCl
 pyodbc
 pyOpenSSL
 pyparsing
+pypdf
 PyPDF2
 pypiwin32
+pypng
 PySocks
+python-bidi
 python-crontab
 python-dateutil
 python-dotenv
@@ -227,18 +237,21 @@ python-language-server
 python-memcached
 python-scrapyd-api
 python-slugify
+python-ulid
 python3-openid
 pytz
 pywin32
 pywinpty
 PyYAML
 pyzmq
+qrcode
 qtconsole
 QtPy
 queuelib
 redis
 referencing
 regex
+reportlab
 requests
 requests-file
 requests-ntlm2
@@ -260,6 +273,7 @@ selenium
 Send2Trash
 sendgrid
 service-identity
+setuptools
 shortuuid
 simplejson
 six
@@ -274,6 +288,7 @@ SQLAlchemy
 sqlparse
 stack-data
 starkbank-ecdsa
+svglib
 terminado
 text-unidecode
 threadpoolctl
@@ -291,10 +306,12 @@ twisted-iocpsupport
 types-python-dateutil
 typing_extensions
 tzdata
+tzlocal
 ujson
 Unidecode
 uri-template
 uritemplate
+uritools
 urllib3
 vine
 w3lib
@@ -306,6 +323,7 @@ websocket-client
 widgetsnbextension
 wrapt
 wsproto
+xhtml2pdf
 XlsxWriter
 xmltodict
 zipp
