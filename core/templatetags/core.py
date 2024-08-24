@@ -9,6 +9,24 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 
+@register.simple_tag
+def exists_in_items(value, items):
+    if not str(value) in items:
+        return False
+    return True
+
+
+@register.simple_tag
+def pagination_links(current_page, total_pages, num_links=4):
+    if(total_pages):
+        start = max(current_page - num_links // 2, 1)
+        end = min(start + num_links - 1, total_pages)
+        if end - start < num_links:
+            start = max(end - num_links + 1, 1)
+        return range(start, end + 1)
+    return 0
+
+
 @register.simple_tag(takes_context=True)
 def get_url(context, action, obj=None, app=None):
     '''
