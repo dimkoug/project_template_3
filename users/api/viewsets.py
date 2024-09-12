@@ -10,6 +10,7 @@ User = get_user_model()
 
 from .serializers import (
     UserSerializer, GroupSerializer,
+    UserSerializerWithToken
 )
 
 
@@ -21,7 +22,7 @@ def current_user(request):
     serializer_context = {
         'request': request,
     }
-    serializer = UserSerializer(request.user, context=serializer_context)
+    serializer = UserSerializerWithToken(request.user, context=serializer_context)
     return Response(serializer.data)
 
 
