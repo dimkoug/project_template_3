@@ -18,9 +18,6 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from rest_framework.authtoken import views as api_views
-from rest_framework_simplejwt import views as jwt_views
-
 from core.utils import delete_item, model_order
 
 from .views import IndexView, ManageView
@@ -31,13 +28,7 @@ urlpatterns = [
     path('model/order/', model_order, name='model-order'),
     path('manage/', ManageView.as_view(), name='manage'),
     path('users/', include('users.urls')),
-    path('users/api/', include('users.api.routers')),
     path('profiles/', include('profiles.urls')),
-    # path('api-token-auth/', api_views.obtain_auth_token, name='api-token'),
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(),
-         name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(),
-         name='token_refresh'),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
 ]
