@@ -24,6 +24,7 @@ from .views import IndexView, ManageView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('api/', include('{{project_name}}.api.routers')),
     path('delete/item/', delete_item, name='delete-item'),
     path('model/order/', model_order, name='model-order'),
     path('manage/', ManageView.as_view(), name='manage'),
