@@ -1,6 +1,7 @@
 import datetime
 from decimal import Decimal
 from django import template
+from django.db import models
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
 from django.apps import apps
 from django.db.models.fields.files import ImageFieldFile, FileField
@@ -260,11 +261,15 @@ def display_data(object):
         value = getattr(object,field.name)
         if isinstance(value, Decimal):
             value = round(value,0)
-        if isinstance(value, datetime.datetime):
+        elif isinstance(value, datetime.datetime):
             format = '%Y-%m-%d %H:%M:%S'
             print(format)
             # applying strftime() to format the datetime
             string = value.strftime(format)
             value = str(string)
+        elif isinstance(field, models.ForeignKey):
+            related_object = value  # This is the related object
+            if related_object:  # Check if the related object exists
+                value = str(related_object) 
         items[field.name] = value
     return items
