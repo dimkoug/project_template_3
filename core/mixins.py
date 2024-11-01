@@ -163,6 +163,14 @@ class PassRequestToFormViewMixin:
 
 
 class PaginationMixin:
+
+    def get_paginate_by(self, queryset):
+        # Check for page size in URL query parameters
+        page_size = self.request.GET.get('page_size')
+        if page_size:
+            return int(page_size)
+        return self.paginate_by
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if not context.get('is_paginated', False):
