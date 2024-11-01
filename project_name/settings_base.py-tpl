@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     'mptt',
     'core',
     'users',
-    'users.api',
     'profiles',
 ]
 

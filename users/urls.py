@@ -1,7 +1,5 @@
 from django.urls import path
 
-from rest_framework.authtoken import views
-
 from .views import (
     LoginView, LogoutView, PasswordResetView,
     PasswordResetCompleteView, PasswordResetDoneView,
@@ -25,6 +23,4 @@ urlpatterns = [
     path('account_activation_sent', AccountActivationSent.as_view(),
          name='account_activation_sent'),
     path('activate/<str:uidb64>/<str:token>/', activate, name='activate'),
-    path('api-token-auth/', views.obtain_auth_token)
-
 ]

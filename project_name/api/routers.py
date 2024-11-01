@@ -16,7 +16,5 @@ urlpatterns = router.urls + [
     path('api-token-auth/', api_views.obtain_auth_token, name='api-token'),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(),
           name='token_obtain_pair'),
-    # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(),
-    #      name='token_refresh'),
-    # path('users/', UserList.as_view())
+
 ]
