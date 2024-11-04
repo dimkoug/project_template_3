@@ -48,22 +48,34 @@ class AjaxMixin:
             return JsonResponse({'template': template})
         return self.render_to_response(context)
 
-class QueryListMixin:
+class QueryMixin:
     def get_queryset(self):
         queryset = super().get_queryset()
-        q = self.request.GET.get('q')
+        q = self.request.GET.get('search')
         q_objects = Q()
+
         if q and q != '':
             q = str(q.strip())
-            for f in  self.model._meta.get_fields():
-                print(f.__class__.__name__)
-                if f.__class__.__name__  in ['CharField', 'TextField']:
-                    str_q = f"Q({f.name}__icontains='{q}')"
-                    print(str_q)
-                    q_obj = eval(str_q)
-                    print(q_obj)
+            for f in self.model._meta.get_fields():
+                field_name = f.name
+                field_class_name = f.__class__.__name__
+
+                # Direct CharField or TextField search
+                if field_class_name in ['CharField', 'TextField']:
+                    q_obj = Q(**{f"{field_name}__icontains": q})
                     q_objects |= q_obj
+                
+                # ForeignKey search on related model's CharField or TextField fields
+                elif field_class_name == 'ForeignKey':
+                    # Get the related model
+                    related_model = f.related_model
+                    for related_field in related_model._meta.get_fields():
+                        if related_field.__class__.__name__ in ['CharField', 'TextField']:
+                            q_obj = Q(**{f"{field_name}__{related_field.name}__icontains": q})
+                            q_objects |= q_obj
+
             queryset = queryset.filter(q_objects)
+
         return queryset
 
 
