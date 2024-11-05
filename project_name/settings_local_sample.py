@@ -1,4 +1,5 @@
 import os
+import mimetypes
 from .settings_base import *
 
 '''
@@ -10,6 +11,9 @@ This file is used to create a local settings_local.py file for development
 DEBUG = True
 
 DJANGO_DEVELOPMENT = True
+
+
+mimetypes.add_type("text/css", ".css", True)
 
 
 if DJANGO_DEVELOPMENT:
