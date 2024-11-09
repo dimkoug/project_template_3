@@ -17,15 +17,25 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#submenu-products" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
-            Links
+        <a class="nav-link collapsed" href="#submenu-companies" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Companies
         </a>
-        <div class="collapse" id="submenu-products">
+        <div class="collapse" id="submenu-companies">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="" class="nav-link">Link</a></li>
+                <li><a href="{% url 'companies:company-list' %}" class="nav-link">Companies</a></li>
             </ul>
         </div>
     </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#submenu-products" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+          Links
+      </a>
+      <div class="collapse" id="submenu-products">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="" class="nav-link">Link</a></li>
+          </ul>
+      </div>
+  </li>
     </ul>
   </div>
 </nav>

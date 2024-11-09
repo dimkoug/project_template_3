@@ -3,7 +3,8 @@
   <div class="col">
   <a href="{% get_list_url form  %}" class="btn btn-light">Back</a>
     {% if form.instance.pk %}
-    {% get_delete_url form.instance app %}
+    
+    <a href="{% get_delete_url form.instance app %}" class="btn btn-danger">Delete</a>
     {% endif %}
   </div>
   <div class="col">

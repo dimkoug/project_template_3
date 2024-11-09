@@ -189,29 +189,26 @@ def get_title(context):
     model = view.model
     return {"title":model._meta.verbose_name_plural.capitalize()}
 
-
-@register.inclusion_tag("core/detail_url.html")
+@register.simple_tag
 def get_detail_url(obj, app=None):
     if not app:
         app = obj._meta.app_label
     url = reverse(f"{app}:{obj.__class__.__name__.lower()}-detail",kwargs={"pk":obj.pk})
-    return {"url":url}
+    return url
 
-
-@register.inclusion_tag("core/edit_url.html")
+@register.simple_tag
 def get_edit_url(obj, app=None):
     if not app:
         app = obj._meta.app_label
     url = reverse(f"{app}:{obj.__class__.__name__.lower()}-update",kwargs={"pk":obj.pk})
-    return {"url":url}
+    return url
 
-
-@register.inclusion_tag("core/delete_url.html")
+@register.simple_tag
 def get_delete_url(obj, app=None):
     if not app:
         app = obj._meta.app_label
     url = reverse(f"{app}:{obj.__class__.__name__.lower()}-delete",kwargs={"pk":obj.pk})
-    return {"url":url}
+    return url
 
 
 
@@ -236,16 +233,9 @@ def get_change_url(context, obj):
     view = context["view"]
     model = view.model
     change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
-    delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
     return change_url
 
-@register.simple_tag
-def get_delete_url(form, app=None):
-    model = form.instance
-    if not app:
-        app = model._meta.app_label
-    delete_url = reverse(f"{app}:{model.__class__.__name__.lower()}-delete",kwargs={"pk":form.instance.pk})
-    return delete_url
+
 
 
 @register.inclusion_tag("core/form_buttons.html",takes_context=True)

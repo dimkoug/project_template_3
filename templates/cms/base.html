@@ -32,7 +32,15 @@
         <h1 class="h2">Dashboard</h1>
       </div>
       <h2>{% block section_title %}{% endblock %}</h2>
-      {% block content %}{% endblock %}
+      <div class="card">
+        <div class="card-body">
+          {% block content %}{% endblock %}
+        </div>
+
+
+
+      </div>
+
     </main>
   </div>
 </div>
@@ -82,7 +90,7 @@
               }
           });
           $("[id$='_date']").datepicker();
-          $("select").select2();
+          //$("select").select2();
       })/* document ready */
 
   })(window,document,jQuery)

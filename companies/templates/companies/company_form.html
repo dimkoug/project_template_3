@@ -1,0 +1,12 @@
+{% extends "cms/base.html" %}
+{% load core %}
+
+{% block content %}
+
+<form method="post">{% csrf_token %}
+	{% include 'core/form.html' %}
+	{% get_form_buttons form %}
+</form>
+
+
+{% endblock content %}
