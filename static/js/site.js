@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $("div[class*='mega-menu-container-']").hide();
-  $(".loading").hide();
+  $(".spinner-border").hide();
   $("div[class*='basket-container']").hide();
   $("body").on("click", "[id^='mega-menu-']", function(e){
        var id = $(this).attr('id').split("-")[2];
@@ -23,11 +23,11 @@ $('body').on("click","[class*='ajax_']", function(e){
            method: 'GET',
            datatype: 'json',
            beforeSend: function(){
-             $(".loading").show();
+             $(".spinner-border").show();
              $(".basket_res").html('');
            },
            complete: function(){
-             $(".loading").hide();
+             $(".spinner-border").hide();
            }
        })).then(function( resp, textStatus, jqXHR ) {
          $(".basket_res").html(resp.html);
@@ -55,14 +55,14 @@ $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
              method: 'GET',
              datatype: 'json',
              beforeSend: function(){
-               $(".loading").show();
+               $(".spinner-border").show();
              },
              complete: function(){
-               $(".loading").hide();
+               $(".spinner-border").hide();
              }
          })).then(function( resp, textStatus, jqXHR ) {
            $(".products").html(resp.html);
-           $(".loading").hide();
+           $(".spinner-border").hide();
          })
 
     return false;
@@ -77,16 +77,16 @@ $("body").on("submit", '#filters-form', function(e){
              data: data,
              datatype: 'json',
              beforeSend: function(){
-               $(".loading").show();
+               $(".spinner-border").show();
                  $('#exampleModal').modal('hide');
              },
              complete: function(){
-               $(".loading").hide();
+               $(".spinner-border").hide();
              }
          })).then(function( resp, textStatus, jqXHR ) {
           $('#exampleModal').modal('hide');
            $(".products").html(resp.html);
-           $(".loading").hide();
+           $(".spinner-border").hide();
          })
 
     return false;
