@@ -17,8 +17,10 @@ from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
 from django.views.generic import FormView
 
-from .tokens import account_activation_token
-from .forms import (
+from companies.models import Company
+
+from users.tokens import account_activation_token
+from users.forms import (
     UserCreationForm, UserAuthenticationForm,
     UserPasswordResetForm
 )
@@ -53,9 +55,22 @@ class AccountActivationSent(TemplateView):
     template_name = 'registration/account_activation_sent.html'
 
 
+class SignupTypeView(TemplateView):
+    template_name = 'registration/signup_type.html'
+
+
+class PendingActivationView(TemplateView):
+    template_name = 'registration/pending_activation.html'
+
+
 class SignupView(FormView):
     form_class = UserCreationForm
     template_name = 'registration/signup.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
     def form_valid(self, form):
         if form.is_valid():
@@ -66,15 +81,25 @@ class SignupView(FormView):
             user.refresh_from_db()  # load the profile instance created by the signal
             user.profile.birth_date = form.cleaned_data.get('birth_date')
             user.save()
-            subject = 'Activate Your MySite Account'
-            message = render_to_string('registration/account_activation_email.html', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-            })
-            user.email_user(subject, message)
-            return redirect('account_activation_sent')
+            signup_type = self.request.GET.get('type')
+            if signup_type == 'company':
+                company, created = Company.objects.get_or_create(name=self.request.POST['company'])
+                company.profiles.add(user.profile)
+                if company.profiles.count() == 1:
+                    user.is_active = True
+                    user.profile.email_confirmed = True
+                    user.save()
+                return redirect('pending_activation')
+            else:    
+                subject = 'Activate Your MySite Account'
+                message = render_to_string('registration/account_activation_email.html', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': account_activation_token.make_token(user),
+                })
+                user.email_user(subject, message)
+                return redirect('account_activation_sent')
         return super().form_valid(form)
 
 

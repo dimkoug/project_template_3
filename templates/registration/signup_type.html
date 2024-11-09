@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Signup</title>
+    <link href="/static/lib/bootstrap-5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/lib/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row py-2">
+        <div class="col-6">
+					<a href="{% url 'signup' %}?type=user">User</a>
+				</div>
+				<div class="col-6">
+					<a href="{% url 'signup' %}?type=company">Company</a>
+				</div>
+			</div>
+    </div>
+  </body>
+</html>
