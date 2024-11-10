@@ -132,7 +132,7 @@ try:
         os.environ['PROJ_LIB'] = os.path.join(VIRTUAL_ENV_DIR, r'.\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
         GDAL_LIBRARY_PATH = os.path.join(VIRTUAL_ENV_DIR, r'.\Lib\site-packages\osgeo\gdal304.dll')
 
-        GDAL_LIBRARY_PATH = r'C:\Program Files\QGIS 3.38.0\bin\gdal309.dll'
-        GEOS_LIBRARY_PATH = r'C:\Program Files\QGIS 3.38.0\bin\geos_c.dll'
+        GDAL_LIBRARY_PATH = r'C:\Program Files\QGIS 3.34.11\bin\gdal309.dll'
+        GEOS_LIBRARY_PATH = r'C:\Program Files\QGIS 3.34.11\bin\geos_c.dll'
 except:
     pass
