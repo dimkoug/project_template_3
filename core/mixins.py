@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.db.models import Q
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.core import serializers
 from django.contrib.auth.models import Group, Permission
@@ -243,15 +244,21 @@ class AjaxDeleteMixin:
 
 class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,AjaxMixin,QueryMixin):
     def get_permission_required(self):
+        admin_group = getattr(settings,'ADMIN_GROUP',None)
+        if not admin_group:
+            raise AttributeError(f"ADMIN_GROUP not defined on the settings project.")
         self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
         else:
-            for group in self.request.user.groups.filter(name__icontains='admins'):
+            for group in self.request.user.groups.filter(name__icontains=admin_group):
                 content_type = ContentType.objects.get_for_model(self.model)
                 permissions = Permission.objects.filter(
                     content_type=content_type,
-                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                    codename__in=[f"add_{self.model.__name__.lower()}",
+                                  f"change_{self.model.__name__.lower()}",
+                                  f"delete_{self.model.__name__.lower()}",
+                                  f"view_{self.model.__name__.lower()}"]
                 )
                 group.permissions.add(*permissions)
             self.request.user.refresh_from_db()
@@ -267,15 +274,21 @@ class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,
 
 class BaseDetailMixin(PermissionRequiredMixin, LoginRequiredMixin):
     def get_permission_required(self):
+        admin_group = getattr(settings,'ADMIN_GROUP',None)
+        if not admin_group:
+            raise AttributeError(f"ADMIN_GROUP not defined on the settings project.")
         self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
         else:
-            for group in self.request.user.groups.filter(name__icontains='admins'):
+            for group in self.request.user.groups.filter(name__icontains=admin_group):
                 content_type = ContentType.objects.get_for_model(self.model)
                 permissions = Permission.objects.filter(
                     content_type=content_type,
-                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                    codename__in=[f"add_{self.model.__name__.lower()}",
+                                  f"change_{self.model.__name__.lower()}",
+                                  f"delete_{self.model.__name__.lower()}",
+                                  f"view_{self.model.__name__.lower()}"]
                 )
                 group.permissions.add(*permissions)
             self.request.user.refresh_from_db()
@@ -287,15 +300,21 @@ class BaseDetailMixin(PermissionRequiredMixin, LoginRequiredMixin):
 
 class BaseCreateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin):
     def get_permission_required(self):
+        admin_group = getattr(settings,'ADMIN_GROUP',None)
+        if not admin_group:
+            raise AttributeError(f"ADMIN_GROUP not defined on the settings project.")
         self.permission_required = f"{self.model._meta.app_label}.add_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
         else:
-            for group in self.request.user.groups.filter(name__icontains='admins'):
+            for group in self.request.user.groups.filter(name__icontains=admin_group):
                 content_type = ContentType.objects.get_for_model(self.model)
                 permissions = Permission.objects.filter(
                     content_type=content_type,
-                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                    codename__in=[f"add_{self.model.__name__.lower()}",
+                                  f"change_{self.model.__name__.lower()}",
+                                  f"delete_{self.model.__name__.lower()}",
+                                  f"view_{self.model.__name__.lower()}"]
                 )
                 group.permissions.add(*permissions)
             self.request.user.refresh_from_db()
@@ -306,15 +325,21 @@ class BaseCreateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixi
 
 class BaseUpdateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin):
     def get_permission_required(self):
+        admin_group = getattr(settings,'ADMIN_GROUP',None)
+        if not admin_group:
+            raise AttributeError(f"ADMIN_GROUP not defined on the settings project.")
         self.permission_required = f"{self.model._meta.app_label}.change_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
         else:
-            for group in self.request.user.groups.filter(name__icontains='admins'):
+            for group in self.request.user.groups.filter(name__icontains=admin_group):
                 content_type = ContentType.objects.get_for_model(self.model)
                 permissions = Permission.objects.filter(
                     content_type=content_type,
-                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                    codename__in=[f"add_{self.model.__name__.lower()}",
+                                  f"change_{self.model.__name__.lower()}",
+                                  f"delete_{self.model.__name__.lower()}",
+                                  f"view_{self.model.__name__.lower()}"]
                 )
                 group.permissions.add(*permissions)
             self.request.user.refresh_from_db()
@@ -326,15 +351,21 @@ class BaseUpdateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixi
 
 class BaseDeleteMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin):
     def get_permission_required(self):
+        admin_group = getattr(settings,'ADMIN_GROUP',None)
+        if not admin_group:
+            raise AttributeError(f"ADMIN_GROUP not defined on the settings project.")
         self.permission_required = f"{self.model._meta.app_label}.delete_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
         else:
-            for group in self.request.user.groups.filter(name__icontains='admins'):
+            for group in self.request.user.groups.filter(name__icontains=admin_group):
                 content_type = ContentType.objects.get_for_model(self.model)
                 permissions = Permission.objects.filter(
                     content_type=content_type,
-                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                    codename__in=[f"add_{self.model.__name__.lower()}",
+                                  f"change_{self.model.__name__.lower()}",
+                                  f"delete_{self.model.__name__.lower()}",
+                                  f"view_{self.model.__name__.lower()}"]
                 )
                 group.permissions.add(*permissions)
             self.request.user.refresh_from_db()

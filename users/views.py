@@ -18,7 +18,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
 from django.views.generic import FormView
-
+from django.conf import settings
 from companies.models import Company
 from profiles.models import Profile
 
@@ -98,7 +98,7 @@ class SignupView(FormView):
                 company.profiles.add(user.profile)
                 company.refresh_from_db()
                 if created and company.profiles.count() == 1:
-                    group, cr = Group.objects.get_or_create(name=f"{company.name}_admins")
+                    group, cr = Group.objects.get_or_create(name=f"{company.name}_{settings.ADMIN_GROUP}")
                     content_type = ContentType.objects.get_for_model(Company)
                     permissions = Permission.objects.filter(
                             content_type=content_type,
@@ -112,7 +112,7 @@ class SignupView(FormView):
                     user.save()
                     return redirect(settings.LOGIN_REDIRECT_URL)
                 else:
-                    group, cr = Group.objects.get_or_create(name=f"{company.name}_users")
+                    group, cr = Group.objects.get_or_create(name=f"{company.name}_{settings.USERS_GROUP}")
                     content_type = ContentType.objects.get_for_model(Company)
                     permissions = Permission.objects.filter(
                             content_type=content_type,
@@ -143,7 +143,7 @@ class SignupView(FormView):
                 user.save()
                 company.profiles.add(user.profile)
                 company.save()
-                group, cr = Group.objects.get_or_create(name=f"{company.name}_users")
+                group, cr = Group.objects.get_or_create(name=f"{company.name}_{settings.USERS_GROUP}")
                 content_type = ContentType.objects.get_for_model(Company)
                 permissions = Permission.objects.filter(
                         content_type=content_type,
