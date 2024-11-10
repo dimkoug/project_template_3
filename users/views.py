@@ -20,6 +20,7 @@ from django.template.loader import render_to_string
 from django.views.generic import FormView
 
 from companies.models import Company
+from profiles.models import Profile
 
 from users.tokens import account_activation_token
 from users.forms import (
@@ -69,6 +70,14 @@ class SignupView(FormView):
     form_class = UserCreationForm
     template_name = 'registration/signup.html'
 
+    def get_initial(self):
+        initial = super().get_initial()
+        if 'email' in self.request.session:
+            initial.update({
+                'email': self.request.session['email']
+            })
+        return initial
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
@@ -115,7 +124,7 @@ class SignupView(FormView):
                     user.profile.email_confirmed = False
                     user.save()
                     return redirect('pending_activation')
-            else:    
+            if not 'company' in self.request.session:  
                 subject = 'Activate Your MySite Account'
                 message = render_to_string('registration/account_activation_email.html', {
                         'user': user,
@@ -125,6 +134,18 @@ class SignupView(FormView):
                 })
                 user.email_user(subject, message)
                 return redirect('account_activation_sent')
+            else:
+                comp = Company.objects.get(name=self.request.session.get('company'))
+                user.is_active = True
+                user.profile.email_confirmed = True
+                parent = Profile.objects.get(id=int(self.request.session.get('parent')))
+                user.profile.parent = parent
+                user.save()
+                comp.profiles.add(user.profile)
+                comp.save()
+                login(self.request, user)
+                return redirect(settings.LOGIN_REDIRECT_URL)
+
         return super().form_valid(form)
 
 

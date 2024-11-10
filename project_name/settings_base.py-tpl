@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'users',
     'profiles',
     'companies',
+    'invitations',
 ]
 
 SITE_ID = 1

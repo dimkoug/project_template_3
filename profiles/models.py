@@ -8,10 +8,12 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True)
-    location = models.CharField(max_length=30, blank=True)
+    parent = models.ForeignKey("self",null=True,blank=True,related_name='profile_children',on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, null=True, blank=True)
+    location = models.CharField(max_length=30, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     email_confirmed = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
 
     def __str__(self):
         return 'profile for user {}'.format(self.user.email)

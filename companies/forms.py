@@ -20,6 +20,10 @@ class CompanyForm(BootstrapForm,forms.ModelForm):
         model = Company
         fields = ('name',)
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
 
 class PermissionSelectForm(BootstrapForm,forms.Form):
     permissions = forms.ModelMultipleChoiceField(

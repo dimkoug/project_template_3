@@ -21,12 +21,29 @@ class UserCreationForm(BootstrapForm, BaseUserCreationForm):
         model = User
         fields = ('email', 'birth_date', 'password1', 'password2', )
 
+    # def __init__(self, *args, **kwargs):
+    #     self.request = kwargs.pop("request")
+    #     super().__init__(*args, **kwargs)
+    #     sign_type = self.request.GET.get('type')
+    #     if sign_type == 'user':
+    #         self.fields.pop('company')
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super().__init__(*args, **kwargs)
-        sign_type = self.request.GET.get('type')
-        if sign_type == 'user':
+        signup_type = self.request.GET.get('type')
+        email = self.request.session.get('email')
+        print(signup_type)
+        if (signup_type and signup_type == 'user') or email:
             self.fields.pop('company')
+        else:
+            self.fields['company'] = forms.CharField(max_length=254, help_text='Add your company')
+            self.fields['company'].widget.attrs.update({
+                    'class': 'form-control'
+            })
+
+
+
 
 
 class UserAuthenticationForm(BootstrapForm, BaseAuthenticationForm):

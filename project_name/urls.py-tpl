@@ -19,17 +19,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from core.utils import delete_item, model_order
+from invitations.functions import activate_invite
 
 from .views import IndexView, ManageView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('activate/invitation/<str:uidb64>/<str:token>/', activate_invite, name='activate-invite'),
     path('api/', include('{{project_name}}.api.routers')),
     path('delete/item/', delete_item, name='delete-item'),
     path('model/order/', model_order, name='model-order'),
     path('manage/', ManageView.as_view(), name='manage'),
     path('users/', include('users.urls')),
     path('companies/', include('companies.urls',namespace='companies')),
+    path('invitations/', include('invitations.urls',namespace='invitations')),
     path('profiles/', include('profiles.urls')),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),

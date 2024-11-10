@@ -25,6 +25,9 @@ class FormInvalidMixin:
 
 
 class AjaxMixin:
+    def dispatch(self, *args, **kwargs):
+        self.ajax_partial = '{}/partials/{}_list_partial.html'.format(self.model._meta.app_label,self.model.__name__.lower())
+        return super().dispatch(*args, **kwargs)
     def get(self, request, *args, **kwargs):
         try:
             self.object = self.get_object()
@@ -45,7 +48,7 @@ class AjaxMixin:
             print(self.ajax_partial)
             template = render_to_string(
                 self.ajax_partial, context, request)
-            return JsonResponse({'template': template})
+            return JsonResponse(template,safe=False)
         return self.render_to_response(context)
 
 class QueryMixin:

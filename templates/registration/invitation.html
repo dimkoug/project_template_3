@@ -1,0 +1,8 @@
+{% autoescape off %}
+Hi {{ email }},
+The user {{user}} invited you to join in application
+
+Please click on the link below to confirm your registration:
+
+http://{{ domain }}{% url 'activate-invite' uidb64=uid token=token %}
+{% endautoescape %}

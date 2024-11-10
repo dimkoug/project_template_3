@@ -27,6 +27,16 @@
         </div>
     </li>
     <li class="nav-item">
+      <a class="nav-link collapsed" href="#submenu-invitations" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+          Invitations
+      </a>
+      <div class="collapse" id="submenu-invitations">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="{% url 'invitations:invitation-list' %}" class="nav-link">Invitations</a></li>
+          </ul>
+      </div>
+  </li>
+    <li class="nav-item">
       <a class="nav-link collapsed" href="#submenu-products" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
           Links
       </a>

@@ -1,6 +1,8 @@
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.urls import reverse
+from django.db.models import Q
+from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.sites.shortcuts import get_current_site
@@ -13,6 +15,45 @@ from profiles.models import Profile
 
 
 User = get_user_model()
+
+
+def get_company_for_sb(request):
+    """"
+    Return Data for  select box 2  plugin
+    """
+    results = []
+    if not request.user.is_authenticated:
+        return JsonResponse(results, safe=False)
+    model = Company
+    q_objects = Q()
+    d_objects = []
+    search = request.GET.get('search')
+    if search and search != '':
+        for f in  model._meta.get_fields():
+            if f.__class__.__name__  in ['CharField', 'TextField']:
+                str_q = f"Q({f.name}__icontains=str('{search}'))"
+                q_obj = eval(str_q)
+                q_objects |= q_obj
+        if request.user.is_superuser:
+            data = model.objects.filter(q_objects)
+        else:
+            data = model.objects.prefetch_related('profiles').filter(q_objects,profiles=request.user.profile)
+    else:
+        if request.user.is_superuser:
+            data = model.objects.all()
+        else:
+            data = model.objects.prefetch_related('profiles').filter(profiles=request.user.profile)
+    
+    
+    for d in data:
+        d_objects.append({
+            "id": d.pk,
+            "text": d.__str__()
+        })
+    return JsonResponse({"results": d_objects}, safe=False)
+
+
+
 
 
 def activate_company_profile(request,company_id,user_id):

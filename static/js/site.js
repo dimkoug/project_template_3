@@ -40,12 +40,12 @@ $('body').on("click",'.close', function(e){
 })
 
 
-var swiper = new Swiper(".mySwiper", {
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
+// var swiper = new Swiper(".mySwiper", {
+//   navigation: {
+//     nextEl: ".swiper-button-next",
+//     prevEl: ".swiper-button-prev",
+//   },
+// });
 
 
 $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
@@ -61,7 +61,7 @@ $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
                $(".spinner-border").hide();
              }
          })).then(function( resp, textStatus, jqXHR ) {
-           $(".products").html(resp.html);
+           $(".res").html(resp);
            $(".spinner-border").hide();
          })
 
