@@ -135,14 +135,24 @@ class SignupView(FormView):
                 user.email_user(subject, message)
                 return redirect('account_activation_sent')
             else:
-                comp = Company.objects.get(name=self.request.session.get('company'))
+                company = Company.objects.get(name=self.request.session.get('company'))
                 user.is_active = True
                 user.profile.email_confirmed = True
                 parent = Profile.objects.get(id=int(self.request.session.get('parent')))
                 user.profile.parent = parent
                 user.save()
-                comp.profiles.add(user.profile)
-                comp.save()
+                company.profiles.add(user.profile)
+                company.save()
+                group, cr = Group.objects.get_or_create(name=f"{company.name}_users")
+                content_type = ContentType.objects.get_for_model(Company)
+                permissions = Permission.objects.filter(
+                        content_type=content_type,
+                        codename__in=['view_company']
+                )
+                group.permissions.add(*permissions)
+                user.groups.add(group)
+                user.save()
+                user.refresh_from_db()
                 login(self.request, user)
                 return redirect(settings.LOGIN_REDIRECT_URL)
 
