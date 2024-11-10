@@ -15,5 +15,6 @@ urlpatterns = [
 
     path('activate/profile/<int:company_id>/int<user_id>/',functions.activate_profile,name='activate-profile'),
     path('remove/profile/<int:company_id>/int<profile_id>/',functions.remove_profile,name='remove-profile'),
+    path('assign-permissions/<int:company_id>/<int:user_id>/', views.assign_permissions, name='assign_permissions'),
 ]
 

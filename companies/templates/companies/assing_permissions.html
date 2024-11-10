@@ -1,0 +1,34 @@
+{% extends "cms/base.html" %}
+{% load core %}
+
+{% block content %}
+
+<h2>Assign Permissions to {{ user.email }}</h2>
+<form method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type="submit">Save Permissions</button>
+</form>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+	'use strict';
+	(function(w,d,$){
+		$(d).ready(function(){
+			$('#id_permissions').select2();
+
+
+		})
+
+
+	})(window,document,jQuery)
+
+
+</script>
+
+
+{% endblock scripts %}

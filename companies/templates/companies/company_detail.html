@@ -41,9 +41,11 @@
 							<tr>
 									<td>{{obj}}</td>
 									<td>
-											{{obj.user.is_active}}
+										
 											{% if not obj.user.is_active %}
 												<a href="{% url 'companies:activate-profile' object.id obj.user_id %}">Activate</a>
+											{% else %}
+											<a href="{% url 'companies:assign_permissions' object.id obj.user_id %}">Assign permissions</a>
 											{% endif %}
 											<a href="{% url 'companies:remove-profile' object.id obj.id %}" class="btn btn-danger btn-sm">Remove Profile</a>
 									</td>
