@@ -6,24 +6,7 @@
     {% get_title %}
     {% add_button  %}
     
-    <div class="row py-2">
-      <div class="col">
-            <form id="search-form" method="get">
-              <div class="mb-3">
-                <label for="search" class="form-label">Search</label>
-                <input type="text" class="form-control" id="search" name="q">
-              </div>
-              <div class="row py-2">
-                <div class="col">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-warning s-back">Clear Filter</button>
-                    <button type="submit" class="btn btn-light">Search</button>
-                </div>
-                </div>
-              </div>
-            </form>
-      </div>
-    </div>
+    {% include "core/search_form.html" %}
     {% include 'partials/spinner_partial.html' %}
     
     

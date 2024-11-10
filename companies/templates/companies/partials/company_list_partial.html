@@ -13,9 +13,9 @@
               <tr>
                 <td><a href="{% get_url 'detail' obj  %}">{{obj}}</a></td>
                 <td>
-                  <a href="{% get_detail_url obj %}">Detail</a>
-									<a href="{% get_edit_url obj %}">Update</a>
-									<a href="{% get_delete_url obj %}">Delete</a>
+                  <a href="{% get_detail_url obj %}"><i class="bi bi-info-square-fill text-primary" style="font-size:1.5rem;"></i></a>
+									<a href="{% get_edit_url obj %}"><i class="bi bi-pencil-square text-warning" style="font-size:1.5rem;"></i></a>
+									<a href="{% get_delete_url obj %}"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a>
                 </td>
               </tr>
               {% endfor %}

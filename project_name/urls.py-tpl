@@ -29,6 +29,7 @@ urlpatterns = [
     path('model/order/', model_order, name='model-order'),
     path('manage/', ManageView.as_view(), name='manage'),
     path('users/', include('users.urls')),
+    path('companies/', include('companies.urls',namespace='companies')),
     path('profiles/', include('profiles.urls')),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
