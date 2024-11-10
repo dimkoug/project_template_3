@@ -10,6 +10,10 @@ This file is used to create a local settings_local.py file for development
 
 DEBUG = True
 
+ADMIN_GROUP = 'admins'
+USERS_GROUP = 'users'
+
+
 DJANGO_DEVELOPMENT = True
 
 
