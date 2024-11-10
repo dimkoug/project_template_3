@@ -241,9 +241,12 @@ class AjaxDeleteMixin:
 
 class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,AjaxMixin,QueryMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__class__.__name__.lower()}"
+        self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
-            return []  
+            return []
+        if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
+                              permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
+            return [self.permission_required] 
         return super().get_permission_required()
 
     def get_context_data(self, **kwargs):
@@ -253,30 +256,42 @@ class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,
 
 class BaseDetailMixin(PermissionRequiredMixin, LoginRequiredMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__class__.__name__.lower()}"
+        self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
-            return []  
+            return []
+        if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
+                              permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
+            return [self.permission_required] 
         return super().get_permission_required()
 
 
 class BaseCreateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}.add_{self.model.__class__.__name__.lower()}"
+        self.permission_required = f"{self.model._meta.app_label}.add_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
-            return []  
+            return []
+        if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
+                              permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
+            return [self.permission_required] 
         return super().get_permission_required()
 
 class BaseUpdateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}.change_{self.model.__class__.__name__.lower()}"
+        self.permission_required = f"{self.model._meta.app_label}.change_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
-            return []  
+            return []
+        if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
+                              permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
+            return [self.permission_required] 
         return super().get_permission_required()
 
 
 class BaseDeleteMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}.delete_{self.model.__class__.__name__.lower()}"
+        self.permission_required = f"{self.model._meta.app_label}.delete_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
-            return []  
+            return []
+        if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
+                              permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
+            return [self.permission_required] 
         return super().get_permission_required()

@@ -10,6 +10,20 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 
+
+@register.filter(name='has_group')
+def has_group(user_groups, group_name):
+    """
+    Checks if the user is part of a specific group.
+    :param user_groups: list of groups the user belongs to
+    :param group_name: group name to check for
+    :return: True if the user belongs to the specified group, otherwise False
+    """
+    return user_groups.filter(name__icontains=group_name).exists()
+
+
+
+
 @register.simple_tag
 def exists_in_items(value, items):
     if not str(value) in items:
