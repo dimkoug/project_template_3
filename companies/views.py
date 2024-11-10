@@ -1,17 +1,19 @@
 from typing import Any
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 
-from users.models import User
+
 
 from companies.models import Company
 from companies.forms import CompanyForm, PermissionSelectForm
 
+User = get_user_model()
 
 # Create your views here.
 

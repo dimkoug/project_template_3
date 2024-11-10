@@ -1,6 +1,7 @@
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
@@ -9,12 +10,12 @@ from django.utils.encoding import force_str
 
 from companies.models import Company
 from profiles.models import Profile
-from users.models import User
 
 
+User = get_user_model()
 
 
-def activate_profile(request,company_id,user_id):
+def activate_company_profile(request,company_id,user_id):
     user = User.objects.get(id=user_id)
     user.is_active = True
     user.save()
@@ -36,7 +37,7 @@ def activate_profile(request,company_id,user_id):
     return redirect(reverse("companies:company-detail",kwargs={"pk":company_id}))
 
 
-def remove_profile(request,company_id,profile_id):
+def remove_company_profile(request,company_id,profile_id):
     profile = Profile.objects.get(id=profile_id)
     company = Company.objects.get(id=company_id)
     company.profiles.remove(profile)
