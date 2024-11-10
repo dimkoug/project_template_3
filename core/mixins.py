@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.core import serializers
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from core.functions import get_rows 
@@ -244,6 +246,15 @@ class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,
         self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
+        else:
+            for group in self.request.user.groups.filter(name__icontains='admins'):
+                content_type = ContentType.objects.get_for_model(self.model)
+                permissions = Permission.objects.filter(
+                    content_type=content_type,
+                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                )
+                group.permissions.add(*permissions)
+            self.request.user.refresh_from_db()
         if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
                               permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
             return [self.permission_required] 
@@ -259,6 +270,15 @@ class BaseDetailMixin(PermissionRequiredMixin, LoginRequiredMixin):
         self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
+        else:
+            for group in self.request.user.groups.filter(name__icontains='admins'):
+                content_type = ContentType.objects.get_for_model(self.model)
+                permissions = Permission.objects.filter(
+                    content_type=content_type,
+                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                )
+                group.permissions.add(*permissions)
+            self.request.user.refresh_from_db()
         if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
                               permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
             return [self.permission_required] 
@@ -270,6 +290,15 @@ class BaseCreateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixi
         self.permission_required = f"{self.model._meta.app_label}.add_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
+        else:
+            for group in self.request.user.groups.filter(name__icontains='admins'):
+                content_type = ContentType.objects.get_for_model(self.model)
+                permissions = Permission.objects.filter(
+                    content_type=content_type,
+                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                )
+                group.permissions.add(*permissions)
+            self.request.user.refresh_from_db()
         if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
                               permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
             return [self.permission_required] 
@@ -280,6 +309,15 @@ class BaseUpdateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixi
         self.permission_required = f"{self.model._meta.app_label}.change_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
+        else:
+            for group in self.request.user.groups.filter(name__icontains='admins'):
+                content_type = ContentType.objects.get_for_model(self.model)
+                permissions = Permission.objects.filter(
+                    content_type=content_type,
+                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                )
+                group.permissions.add(*permissions)
+            self.request.user.refresh_from_db()
         if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
                               permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
             return [self.permission_required] 
@@ -291,6 +329,15 @@ class BaseDeleteMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixi
         self.permission_required = f"{self.model._meta.app_label}.delete_{self.model.__name__.lower()}"
         if self.request.user.is_superuser:
             return []
+        else:
+            for group in self.request.user.groups.filter(name__icontains='admins'):
+                content_type = ContentType.objects.get_for_model(self.model)
+                permissions = Permission.objects.filter(
+                    content_type=content_type,
+                    codename__in=[f"add_{self.model.__name__.lower()}", f"change_{self.model.__name__.lower()}", f"delete_{self.model.__name__.lower()}", f"view_{self.model.__name__.lower()}"]
+                )
+                group.permissions.add(*permissions)
+            self.request.user.refresh_from_db()
         if self.request.user.groups.filter(permissions__codename=self.permission_required.split('.')[1],
                               permissions__content_type__app_label=self.permission_required.split('.')[0]).exists():
             return [self.permission_required] 
