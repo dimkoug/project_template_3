@@ -1,10 +1,7 @@
-from typing import Any
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
@@ -18,9 +15,6 @@ from companies.forms import CompanyForm, PermissionSelectForm
 User = get_user_model()
 
 # Create your views here.
-
-
-
 
 def assign_permissions(request, company_id, user_id):
     user = User.objects.get(id=user_id)
@@ -83,11 +77,6 @@ class CompanyUpdateView(BaseUpdateMixin,UpdateView):
     form_class = CompanyForm
     queryset = Company.objects.prefetch_related('profiles')
 
-    def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_change"
-        if self.request.user.is_superuser:
-            return []  
-        return super().get_permission_required()
 
     def get_queryset(self):
         queryset = super().get_queryset()
