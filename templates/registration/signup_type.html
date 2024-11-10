@@ -8,15 +8,22 @@
     <link rel="stylesheet" href="/static/lib/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
   </head>
   <body>
-    <div class="container">
-      <div class="row py-2">
-        <div class="col-6">
-					<a href="{% url 'signup' %}?type=user">User</a>
-				</div>
-				<div class="col-6">
-					<a href="{% url 'signup' %}?type=company">Company</a>
-				</div>
-			</div>
+    <div class="container py-4">
+      <div class="card m-auto">
+        <div class="card-body">
+          <h5 class="card-title text-center">Select Account Type</h5>
+          <div class="d-flex flex-row py-2">
+            <div class="col text-center ">
+              <a href="{% url 'signup' %}?type=user" class="btn btn-primary">User</a>
+            </div>
+            <div class="col text-center">
+              <a href="{% url 'signup' %}?type=company" class="btn btn-primary">Company</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
     </div>
   </body>
 </html>
