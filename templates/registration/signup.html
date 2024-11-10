@@ -8,19 +8,23 @@
     <link rel="stylesheet" href="/static/lib/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
   </head>
   <body>
-    <div class="container">
-      <div class="row py-2">
-        <div class="col">
-          <form method="post">
-              <h2>Sign up</h2>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="row py-2">
-              <div class="col">
-                <button type="submit" class="btn btn-primary float-right">Sign up</button>
-              </div>
+    <div class="container py-2 mt-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Sign up</h5>
+          <div class="d-flex flex-row py-2">
+            <div class="col">
+              <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="row py-2">
+                  <div class="col">
+                    <button type="submit" class="btn btn-primary float-right">Sign up</button>
+                  </div>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
