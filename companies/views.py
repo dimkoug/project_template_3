@@ -4,12 +4,13 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 
 
-from core.mixins import SuccessUrlMixin, PaginationMixin, AjaxMixin, QueryMixin, PassRequestToFormViewMixin,FormMixin
+from core.mixins import BaseListMixin,BaseDetailMixin,BaseCreateMixin,BaseUpdateMixin,BaseDeleteMixin
 
 from companies.models import Company
 from companies.forms import CompanyForm, PermissionSelectForm
@@ -17,6 +18,8 @@ from companies.forms import CompanyForm, PermissionSelectForm
 User = get_user_model()
 
 # Create your views here.
+
+
 
 
 def assign_permissions(request, company_id, user_id):
@@ -40,12 +43,11 @@ def assign_permissions(request, company_id, user_id):
 
 
 
-class CompanyListView(PaginationMixin,AjaxMixin,QueryMixin,ListView):
+class CompanyListView(BaseListMixin,ListView):
     model = Company
     fields = {}
     queryset = Company.objects.prefetch_related('profiles')
     paginate_by = 2
-
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -53,12 +55,9 @@ class CompanyListView(PaginationMixin,AjaxMixin,QueryMixin,ListView):
             queryset = queryset.filter(profiles=self.request.user.profile)
         return queryset
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['template'] = self.ajax_partial
-        return context
 
-class CompanyDetailView(DetailView):
+
+class CompanyDetailView(BaseDetailMixin,DetailView):
     model = Company
     queryset = Company.objects.prefetch_related('profiles__user')
 
@@ -69,10 +68,9 @@ class CompanyDetailView(DetailView):
         return queryset
     
 
-class CompanyCreateView(SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin,CreateView):
+class CompanyCreateView(BaseCreateMixin,CreateView):
     model = Company
     form_class = CompanyForm
-
 
     def form_valid(self, form):
         obj = form.save()
@@ -80,10 +78,16 @@ class CompanyCreateView(SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin,Cre
         return super().form_valid(form)
 
 
-class CompanyUpdateView(SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin,UpdateView):
+class CompanyUpdateView(BaseUpdateMixin,UpdateView):
     model = Company
     form_class = CompanyForm
     queryset = Company.objects.prefetch_related('profiles')
+
+    def get_permission_required(self):
+        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_change"
+        if self.request.user.is_superuser:
+            return []  
+        return super().get_permission_required()
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -92,9 +96,10 @@ class CompanyUpdateView(SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin,Upd
         return queryset
 
 
-class CompanyDeleteView(SuccessUrlMixin,DeleteView):
+class CompanyDeleteView(BaseDeleteMixin,DeleteView):
     model = Company
     queryset = Company.objects.prefetch_related('profiles')
+
 
     def get_queryset(self):
         queryset = super().get_queryset()
