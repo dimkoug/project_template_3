@@ -5,6 +5,8 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 try:
     from django.utils.encoding import force_text
 except ImportError:
@@ -85,11 +87,34 @@ class SignupView(FormView):
             if signup_type == 'company':
                 company, created = Company.objects.get_or_create(name=self.request.POST['company'])
                 company.profiles.add(user.profile)
-                if company.profiles.count() == 1:
+                company.refresh_from_db()
+                if created and company.profiles.count() == 1:
+                    group, cr = Group.objects.get_or_create(name=f"{company.name}_admins")
+                    content_type = ContentType.objects.get_for_model(Company)
+                    permissions = Permission.objects.filter(
+                            content_type=content_type,
+                            codename__in=['add_company', 'change_company', 'delete_company', 'view_company']
+                    )
+                    group.permissions.add(*permissions)
+
+                    user.groups.add(group)
                     user.is_active = True
                     user.profile.email_confirmed = True
                     user.save()
-                return redirect('pending_activation')
+                    return redirect(settings.LOGIN_REDIRECT_URL)
+                else:
+                    group, cr = Group.objects.get_or_create(name=f"{company.name}_users")
+                    content_type = ContentType.objects.get_for_model(Company)
+                    permissions = Permission.objects.filter(
+                            content_type=content_type,
+                            codename__in=['view_company']
+                    )
+                    group.permissions.add(*permissions)
+                    user.groups.add(group)
+                    user.is_active = False
+                    user.profile.email_confirmed = False
+                    user.save()
+                    return redirect('pending_activation')
             else:    
                 subject = 'Activate Your MySite Account'
                 message = render_to_string('registration/account_activation_email.html', {

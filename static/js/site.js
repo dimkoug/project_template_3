@@ -40,12 +40,12 @@ $('body').on("click",'.close', function(e){
 })
 
 
-/*var swiper = new Swiper(".mySwiper", {
+var swiper = new Swiper(".mySwiper", {
   navigation: {
     nextEl: ".swiper-button-next",
     prevEl: ".swiper-button-prev",
   },
-});*/
+});
 
 
 $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
@@ -61,7 +61,7 @@ $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
                $(".spinner-border").hide();
              }
          })).then(function( resp, textStatus, jqXHR ) {
-           $(".res").html(resp);
+           $(".products").html(resp.html);
            $(".spinner-border").hide();
          })
 
