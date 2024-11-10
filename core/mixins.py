@@ -241,7 +241,7 @@ class AjaxDeleteMixin:
 
 class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,AjaxMixin,QueryMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_view"
+        self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__class__.__name__.lower()}"
         if self.request.user.is_superuser:
             return []  
         return super().get_permission_required()
@@ -253,7 +253,7 @@ class BaseListMixin(PermissionRequiredMixin, LoginRequiredMixin,PaginationMixin,
 
 class BaseDetailMixin(PermissionRequiredMixin, LoginRequiredMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_view"
+        self.permission_required = f"{self.model._meta.app_label}.view_{self.model.__class__.__name__.lower()}"
         if self.request.user.is_superuser:
             return []  
         return super().get_permission_required()
@@ -261,14 +261,14 @@ class BaseDetailMixin(PermissionRequiredMixin, LoginRequiredMixin):
 
 class BaseCreateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_add"
+        self.permission_required = f"{self.model._meta.app_label}.add_{self.model.__class__.__name__.lower()}"
         if self.request.user.is_superuser:
             return []  
         return super().get_permission_required()
 
 class BaseUpdateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin,PassRequestToFormViewMixin,FormMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_change"
+        self.permission_required = f"{self.model._meta.app_label}.change_{self.model.__class__.__name__.lower()}"
         if self.request.user.is_superuser:
             return []  
         return super().get_permission_required()
@@ -276,7 +276,7 @@ class BaseUpdateMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixi
 
 class BaseDeleteMixin(PermissionRequiredMixin, LoginRequiredMixin,SuccessUrlMixin):
     def get_permission_required(self):
-        self.permission_required = f"{self.model._meta.app_label}_{self.model.__class__.__name__.lower()}_delete"
+        self.permission_required = f"{self.model._meta.app_label}.delete_{self.model.__class__.__name__.lower()}"
         if self.request.user.is_superuser:
             return []  
         return super().get_permission_required()
