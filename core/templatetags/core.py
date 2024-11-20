@@ -259,21 +259,28 @@ def get_form_buttons(context, form):
 
 @register.simple_tag
 def display_data(object):
+    """
+    Tag to extract and format data from a model instance for dynamic display in templates,
+    including handling fields with choices.
+    """
     items = {}
     for field in object._meta.fields:
-        print(type(field), field.name)
-        value = getattr(object,field.name)
-        if isinstance(value, Decimal):
-            value = round(value,0)
-        elif isinstance(value, datetime.datetime):
-            format = '%Y-%m-%d %H:%M:%S'
-            print(format)
-            # applying strftime() to format the datetime
-            string = value.strftime(format)
-            value = str(string)
-        elif isinstance(field, models.ForeignKey):
-            related_object = value  # This is the related object
-            if related_object:  # Check if the related object exists
-                value = str(related_object) 
-        items[field.name] = value
+        try:
+            # Check if the field has choices
+            if field.choices:
+                value = getattr(object, f"get_{field.name}_display")()  # Get the display value
+            else:
+                value = getattr(object, field.name)
+                              # Format Decimal
+                if isinstance(value, Decimal):
+                    value = round(value, 2)  # Adjust rounding precision as needed
+                # Format datetime
+                elif isinstance(value, datetime.datetime):
+                    value = value.strftime('%Y-%m-%d %H:%M:%S')  # Default datetime format
+                # Handle ForeignKey fields
+                elif field.remote_field:  # Checks if the field is a ForeignKey
+                    value = str(value) if value else None
+            items[field.name] = value
+        except AttributeError:
+            items[field.name] = None  # Handle missing fields gracefully
     return items
