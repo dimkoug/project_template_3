@@ -90,7 +90,7 @@ djangorestframework-simplejwt
 djangorestframework-xml
 drf-social-oauth2
 ecdsa
-et-xmlfile
+et_xmlfile
 exceptiongroup
 executing
 fabric
@@ -215,6 +215,7 @@ pylama-pylint
 pylint
 pylint-django
 pylint-plugin-utils
+pymemcache
 PyMeta3
 PyNaCl
 pyodbc
@@ -328,3 +329,4 @@ XlsxWriter
 xmltodict
 zipp
 zope.interface
+
