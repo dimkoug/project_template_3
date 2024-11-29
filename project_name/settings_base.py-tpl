@@ -166,8 +166,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/{{ docs_version }}/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PUBLIC_DIR, "static")
+
 
 
 # Use the Webpack Bundle Tracker file
@@ -178,6 +177,8 @@ WEBPACK_LOADER = {
     }
 }
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PUBLIC_DIR, "static")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PUBLIC_DIR, "media")
