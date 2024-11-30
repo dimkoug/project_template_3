@@ -4,6 +4,7 @@ from django import template
 from django.db import models
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
 from django.apps import apps
+from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile, FileField
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -90,25 +91,28 @@ def sortFn(value):
 
 
 @register.simple_tag(takes_context=True)
-def get_generate_sidebar(context):
+def generate_sidebar(context):
     request = context['request']
     urls = ""
-    app_models = list(apps.get_app_config(context['app']).get_models())
-    app_models.sort(key=sortFn)
-    
-    for model in app_models:
-        try:
-            url_item = reverse(
-                "{}:{}-list".format(model._meta.app_label, model.__name__.lower()))
-        except NoReverseMatch:
-            url_item = None
-        if url_item:
-            item = "<div><a href='{}'".format(url_item)
-            if url_item == request.path:
-                item += "class='active'"
-            item += ">{}</a></div>".format(model._meta.verbose_name_plural.capitalize())
-            print(item)
-            urls += item
+    app_models = []
+    sorted_menu = sorted(settings.SIDEBAR_APPS)
+    for app in sorted_menu:
+        item = f"""<li><div class='menu' data-bs-toggle="collapse" data-bs-target='#collapse-{app}' aria-expanded='false' aria-controls='collapse-{app}'>{app.capitalize()}</div>
+								<ul class='collapse' id='collapse-{app}'>"""
+        app_models = list(apps.get_app_config(app).get_models())
+        for model in app_models:
+            print(model)
+            try:
+                url_item = reverse_lazy(
+                    "{}:{}-list".format(model._meta.app_label, model.__name__.lower()))
+            except NoReverseMatch:
+                url_item = None
+            print(url_item)
+        
+            if url_item:
+                item += f"<li><a href='{url_item}'>{model.__name__.capitalize()}</a></li>"
+        item += '</ul></li>'
+        urls += item
     return format_html(mark_safe(urls))
 
 
