@@ -59,27 +59,18 @@ def create_query_string(request):
                     query_string += "&{}={}".format(key, value)
     return query_string
 
-
-def get_data_for_sb(request,model_name):
+def get_data_for_sb(request,app_name, model_name):
     """"
     Return Data for  select box 2  plugin
     """
-    allwed = False
-    model =None
-    allowed_models = get_allowed_models()
-    print(allowed_models)
-    if model_name:
-        for model in apps.get_models():
-            if model.__name__.lower() == model_name.lower():
-                model = model
-                
-    for item in allowed_models:
-        if model_name.capitalize() == item[1]:
-            allwed = True
-    if not allwed:
-        raise ValueError("Invalid model name")
+    if not app_name:
+        raise ValueError("App name not provided or invalid")
     if not model_name:
         raise ValueError("Model name not provided or invalid")
+    
+    model = apps.get_model(app_label=app_name, model_name=model_name)
+    
+    
     results = []
     if not request.user.is_authenticated:
         return JsonResponse(results, safe=False)
@@ -115,6 +106,7 @@ def get_data_for_sb(request,model_name):
             "text": d.__str__()
         })
     return JsonResponse({"results": d_objects}, safe=False)
+
 
 def get_sb_data(request, model):
     q_objects = Q()
