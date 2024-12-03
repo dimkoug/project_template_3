@@ -15,9 +15,9 @@ from django.utils.html import format_html
 
 def unique_items(keys, objects):
     # Extract relevant items based on keys and create frozensets for uniqueness
-    locations = [{key: obj[key] for key in keys if key in obj} for obj in objects]
+    items = [{key: obj[key] for key in keys if key in obj} for obj in objects]
     # Use frozenset to ensure uniqueness
-    set_of_dicts = {frozenset(d.items()) for d in locations}
+    set_of_dicts = {frozenset(d.items()) for d in items}
     # Convert back to dictionaries for easier usability
     unique_dicts = [dict(s) for s in set_of_dicts]
     print(len(unique_dicts))
