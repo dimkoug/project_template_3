@@ -14,8 +14,11 @@ from django.utils.html import format_html
 
 
 def unique_items(keys, objects):
-    # Extract relevant items based on keys and create frozensets for uniqueness
-    items = [{key: obj[key] for key in keys if key in obj} for obj in objects]
+    # Extract relevant items based on keys, filter out null/empty string values, and create frozensets for uniqueness
+    items = [
+        {key: obj[key] for key in keys if key in obj and obj[key] is not None and obj[key] != ""}
+        for obj in objects
+    ]
     # Use frozenset to ensure uniqueness
     set_of_dicts = {frozenset(d.items()) for d in items}
     # Convert back to dictionaries for easier usability
