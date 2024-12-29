@@ -190,7 +190,7 @@ def get_rows(fields, object_list):
     return format_html(mark_safe(items))
 
 
-@register.inclusion_tag("core/add_button.html",takes_context=True)
+@register.inclusion_tag("partials/add_button.html",takes_context=True)
 def add_button(context, app=None):
     view = context["view"]
     model = view.model
@@ -201,7 +201,7 @@ def add_button(context, app=None):
     return {"url":url}
 
 
-@register.inclusion_tag("core/title.html",takes_context=True)
+@register.inclusion_tag("partials/title.html",takes_context=True)
 def get_title(context):
     view = context["view"]
     model = view.model
@@ -256,7 +256,7 @@ def get_change_url(context, obj):
 
 
 
-@register.inclusion_tag("core/form_buttons.html",takes_context=True)
+@register.inclusion_tag("partials/form_buttons.html",takes_context=True)
 def get_form_buttons(context, form):
     return {"form":form, "context":context}
 

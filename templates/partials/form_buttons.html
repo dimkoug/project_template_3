@@ -1,9 +1,12 @@
-{% load core %}
-<div class="row py-2">
+{% load dynamic %}
+<div class="d-flex flex-row py-2">
   <div class="col">
-  <a href="{% get_url 'list' %}" class="btn btn-light">Back</a>
-    {% if form.instance.pk %}
-      <a href="{% get_url 'delete' form.instance %}" class="btn btn-danger">Delete</a>
+    {% if view.list_url %}
+        <a href="{{view.list_url}}" class="btn btn-light">Back</a>
+    {% endif %}
+    
+        {% if form.instance.pk %}
+      <a href="{% get_delete_url form.instance %}" class="btn btn-danger">Delete</a>
     {% endif %}
   </div>
   <div class="col">

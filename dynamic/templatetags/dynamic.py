@@ -140,7 +140,7 @@ def get_rows(fields, object_list):
     return format_html(mark_safe(items))
 
 
-@register.inclusion_tag("dynamic/add_button.html",takes_context=True)
+@register.inclusion_tag("partials/add_button.html",takes_context=True)
 def add_button(context):
     view = context["view"]
     model = view.model
@@ -148,14 +148,14 @@ def add_button(context):
     return {"url":url}
 
 
-@register.inclusion_tag("dynamic/title.html",takes_context=True)
+@register.inclusion_tag("partials/title.html",takes_context=True)
 def get_title(context):
     view = context["view"]
     model = view.model
     return {"title":model._meta.verbose_name_plural.capitalize()}
 
 
-@register.inclusion_tag("dynamic/actions.html",takes_context=True)
+@register.inclusion_tag("partials/actions.html",takes_context=True)
 def get_actions(context, obj):
     view = context["view"]
     model = view.model
@@ -187,7 +187,7 @@ def get_view_url(obj, app=None):
 
 
 
-@register.inclusion_tag("dynamic/form_buttons.html",takes_context=True)
+@register.inclusion_tag("partials/form_buttons.html",takes_context=True)
 def get_form_buttons(context, form):
     return {"form":form, "context":context}
 
