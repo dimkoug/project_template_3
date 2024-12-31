@@ -65,6 +65,7 @@ django-debug-toolbar
 django-extensions
 django-filter
 django-formtools
+django-guardian
 django-js-asset
 django-memoize
 django-mptt
@@ -78,6 +79,7 @@ django-redis
 django-redis-cache
 django-redis-sessions
 django-rest-swagger
+django-reversion
 django-sendgrid-v5
 django-timezone-field
 django-uuslug
@@ -274,7 +276,6 @@ selenium
 Send2Trash
 sendgrid
 service-identity
-setuptools
 shortuuid
 simplejson
 six
@@ -329,4 +330,3 @@ XlsxWriter
 xmltodict
 zipp
 zope.interface
-
