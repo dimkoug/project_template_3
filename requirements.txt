@@ -190,6 +190,7 @@ peppercorn
 pickleshare
 pillow
 platformdirs
+plotly
 pluggy
 prometheus_client
 prompt_toolkit
@@ -291,6 +292,7 @@ sqlparse
 stack-data
 starkbank-ecdsa
 svglib
+tenacity
 terminado
 text-unidecode
 threadpoolctl
