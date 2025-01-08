@@ -93,3 +93,62 @@ $("body").on("submit", '#filters-form', function(e){
 })
 
 })
+
+
+        $(document).ready(function () {
+            let formsetContainer = document.querySelectorAll('.formset-container'),
+                form = document.querySelector('#form'),
+                addFormsetButton = document.querySelector('#add-formset'),
+                totalForms = document.querySelector('#id_form-TOTAL_FORMS'),
+                formsetNum = formsetContainer.length - 1;
+
+            addFormsetButton.addEventListener('click', $addFormset);
+
+            function $addFormset(e) {
+                e.preventDefault();
+                let newForm = formsetContainer[0].cloneNode(true),
+                    formRegex = RegExp(`form-(\\d){1}-`, 'g');
+                formsetNum++
+                newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formsetNum}-`)
+                form.insertBefore(newForm, addFormsetButton);
+                totalForms.setAttribute('value', `${formsetNum + 1}`)
+
+
+            }
+
+            document.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('remove-form')) {
+                    e.preventDefault();
+
+                    // Find the form to remove by traversing the DOM from the clicked button
+                    let formToRemove = e.target.closest('.formset-container');
+                    formToRemove.remove();
+
+                    // Update the TOTAL_FORMS count
+                    formsetNum--;
+                    totalForms.setAttribute('value', formsetNum);
+
+                    // Re-index the remaining forms to keep their field names and IDs consistent
+                    reIndexForms();
+                }
+            });
+
+            function reIndexForms() {
+                // Reindex the forms after a removal to keep consistent form field names
+                document.querySelectorAll('.formset-container').forEach((form, index) => {
+                    form.querySelectorAll(':input').forEach(input => {
+                        const name = input.getAttribute('name');
+                        if (name) {
+                            input.setAttribute('name', name.replace(/form-(\d+)-/, `form-${index}-`));
+                        }
+                        const id = input.getAttribute('id');
+                        if (id) {
+                            input.setAttribute('id', id.replace(/form-(\d+)-/, `form-${index}-`));
+                        }
+                    });
+                });
+            }
+
+            // Add more calls here for additional formsets
+            // initFormset("another_formset_identifier");
+        });
