@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, Group
 from django.contrib.auth.base_user import AbstractBaseUser
 try:
     from django.utils.translation import ugettext_lazy as _
@@ -17,12 +17,15 @@ from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
+    parent = models.ForeignKey('self',null=True,blank=True,on_delete=models.CASCADE,related_name='children_users')
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff'), default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+
+    groups = models.ManyToManyField(Group,blank=True)
 
     objects = UserManager()
 
