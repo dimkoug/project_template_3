@@ -13,6 +13,8 @@ DEBUG = True
 ADMIN_GROUP = 'admins'
 USERS_GROUP = 'users'
 
+PAGINATED_BY = 15
+
 
 DJANGO_DEVELOPMENT = True
 
