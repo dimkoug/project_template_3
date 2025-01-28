@@ -124,6 +124,11 @@ class SignupView(FormView):
                     user.profile.email_confirmed = False
                     user.save()
                     return redirect('pending_activation')
+            else:
+                group, cr = Group.objects.get_or_create(name=f"{settings.USERS_GROUP}")
+                user.groups.add(group)
+                user.save()
+            
             if not 'company' in self.request.session:  
                 subject = 'Activate Your MySite Account'
                 message = render_to_string('registration/account_activation_email.html', {
@@ -139,6 +144,7 @@ class SignupView(FormView):
                 user.is_active = True
                 user.profile.email_confirmed = True
                 parent = Profile.objects.get(id=int(self.request.session.get('parent')))
+                user.parent = parent.user
                 user.profile.parent = parent
                 user.save()
                 company.profiles.add(user.profile)
