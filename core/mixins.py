@@ -207,12 +207,12 @@ class PaginationMixin:
         else:  # case 3
             pages = [x for x in range(page_no - 5, page_no + 6)]
         
-        try:
-            context['fields'] = self.fields
-            table = get_rows(self.fields,current_page)
-            context['table'] = table
-        except:
-            raise
+        # try:
+        #     context['fields'] = self.fields
+        #     table = get_rows(self.fields,current_page)
+        #     context['table'] = table
+        # except:
+        #     raise
         context.update({'pages': pages})
         return context
 
