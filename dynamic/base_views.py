@@ -23,7 +23,7 @@ class BaseListView(LoginRequiredMixin, ListView):
         app_name = self.kwargs.get('app_name')
         self.model = apps.get_model(app_label=app_name, model_name=model_name)
         if self.model:
-            self.ajax_partial = '{}/partials/{}_list_partial.html'.format(self.model._meta.app_label,self.model.__name__.lower())
+            self.ajax_partial = '{}/partials/_{}_list.html'.format(self.model._meta.app_label,self.model.__name__.lower())
             self.list_url = reverse("dynamic-list",kwargs={"model_name":model_name, "app_name":app_name})
         return super().dispatch(*args, **kwargs)
     
@@ -53,7 +53,7 @@ class BaseDetailView(LoginRequiredMixin, DetailView):
         app_name = self.kwargs.get('app_name')
         self.model = apps.get_model(app_label=app_name, model_name=model_name)
         if self.model:
-            self.ajax_partial = '{}/partials/{}_list_partial.html'.format(self.model._meta.app_label,self.model.__name__.lower())
+            self.ajax_partial = '{}/partials/_{}_list.html'.format(self.model._meta.app_label,self.model.__name__.lower())
             self.list_url = reverse("dynamic-list",kwargs={"model_name":model_name, "app_name":app_name})
         return super().dispatch(*args, **kwargs)
     

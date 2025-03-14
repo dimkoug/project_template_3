@@ -112,8 +112,8 @@ def get_rows(fields, object_list):
     for obj in object_list:
         app = obj._meta.app_label
         model = obj.__class__.__name__.lower()
-        update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
-        delete_url = reverse_lazy(f"{app}:{model}-delete",kwargs={"pk":obj.pk})
+        update_url = reverse_lazy(f"{app}:{model}_change",kwargs={"pk":obj.pk})
+        delete_url = reverse_lazy(f"{app}:{model}_delete",kwargs={"pk":obj.pk})
         tr = '<tr>'
         for field in fields:
             db_name = field['db_name']
@@ -140,54 +140,54 @@ def get_rows(fields, object_list):
     return format_html(mark_safe(items))
 
 
-@register.inclusion_tag("partials/add_button.html",takes_context=True)
+@register.inclusion_tag("partials/_add_button.html",takes_context=True)
 def add_button(context):
     view = context["view"]
     model = view.model
-    url = reverse(f"dynamic-add",kwargs={"model_name":model.__name__.lower(), 'app_name':model._meta.app_label})
+    url = reverse(f"dynamic_add",kwargs={"model_name":model.__name__.lower(), 'app_name':model._meta.app_label})
     return {"url":url}
 
 
-@register.inclusion_tag("partials/title.html",takes_context=True)
+@register.inclusion_tag("partials/_title.html",takes_context=True)
 def get_title(context):
     view = context["view"]
     model = view.model
     return {"title":model._meta.verbose_name_plural.capitalize()}
 
 
-@register.inclusion_tag("partials/actions.html",takes_context=True)
+@register.inclusion_tag("partials/_actions.html",takes_context=True)
 def get_actions(context, obj):
     view = context["view"]
     model = view.model
-    change_url = reverse(f"dynamic-change",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
-    delete_url = reverse(f"dynamic-delete",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
+    change_url = reverse(f"dynamic_change",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
+    delete_url = reverse(f"dynamic_delete",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
     return {"change_url":change_url,"delete_url":delete_url}
 
 
 @register.simple_tag(takes_context=True)
 def get_list_url(context, obj):
-    list_url = reverse_lazy(f"dynamic-list",kwargs={"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
+    list_url = reverse_lazy(f"dynamic_list",kwargs={"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
     return list_url
 
 
 @register.simple_tag
 def get_change_url(obj, app=None):
-    url = reverse(f"dynamic-change",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
+    url = reverse(f"dynamic_change",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
     return url
 
 @register.simple_tag
 def get_delete_url(obj, app=None):
-    url = reverse(f"dynamic-delete",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
+    url = reverse(f"dynamic_delete",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
     return url
 
 @register.simple_tag
 def get_view_url(obj, app=None):
-    url = reverse(f"dynamic-view",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
+    url = reverse(f"dynamic_view",kwargs={"pk":obj.pk,"model_name":obj.__class__.__name__.lower(),"app_name":obj._meta.app_label})
     return url
 
 
 
-@register.inclusion_tag("partials/form_buttons.html",takes_context=True)
+@register.inclusion_tag("partials/_form_buttons.html",takes_context=True)
 def get_form_buttons(context, form):
     return {"form":form, "context":context}
 
