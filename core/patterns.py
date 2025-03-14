@@ -28,23 +28,23 @@ def get_patterns(app_name, filename):
                         if issubclass(value, ListView):
                             patterns += [path('{}/'.format(
                                 model_name.lower()), value.as_view(),
-                                name='{}-list'.format(model_name.lower()))]
+                                name='{}_list'.format(model_name.lower()))]
                         if issubclass(value, DetailView):
-                            patterns += [path('{}/<int:pk>/detail/'.format(
+                            patterns += [path('{}/view/<int:pk>/'.format(
                                 model_name.lower()), value.as_view(),
-                                name='{}-detail'.format(model_name.lower()))]
+                                name='{}_view'.format(model_name.lower()))]
                         if issubclass(value, CreateView):
-                            patterns += [path('{}/create/'.format(
+                            patterns += [path('{}/add/'.format(
                                 model_name.lower()), value.as_view(),
-                                name='{}-create'.format(model_name.lower()))]
+                                name='{}_add'.format(model_name.lower()))]
                         if issubclass(value, UpdateView):
-                            patterns += [path('{}/<int:pk>/update/'.format(
+                            patterns += [path('{}/change/<int:pk>/'.format(
                                 model_name.lower()), value.as_view(),
-                                name='{}-update'.format(model_name.lower()))]
+                                name='{}_change'.format(model_name.lower()))]
                         if issubclass(value, DeleteView):
-                            patterns += [path('{}/<int:pk>/delete/'.format(
+                            patterns += [path('{}/delete/<int:pk>/'.format(
                                 model_name.lower()), value.as_view(),
-                                name='{}-delete'.format(model_name.lower()))]
+                                name='{}_delete'.format(model_name.lower()))]
             _views.add(value.__name__)
 
     return patterns
