@@ -39,6 +39,7 @@ click-repl
 colorama
 comm
 constantly
+construct
 contourpy
 coreapi
 coreschema
@@ -66,6 +67,7 @@ django-extensions
 django-filter
 django-formtools
 django-guardian
+django-haystack
 django-js-asset
 django-memoize
 django-mptt
@@ -88,8 +90,8 @@ djangorestframework
 djangorestframework-datatables
 djangorestframework-jwt
 djangorestframework-oauth
-djangorestframework-simplejwt
 djangorestframework-xml
+djangorestframework_simplejwt
 drf-social-oauth2
 ecdsa
 et_xmlfile
@@ -108,6 +110,7 @@ future
 greenlet
 gunicorn
 h11
+haystack
 html5lib
 httpcore
 httplib2
@@ -121,6 +124,7 @@ invoke
 ipykernel
 ipython
 ipython-genutils
+ipython_pygments_lexers
 ipywidgets
 isoduration
 isort
@@ -162,6 +166,7 @@ mistune
 mssql-django
 mypy
 mypy-extensions
+narwhals
 nbclient
 nbconvert
 nbformat
@@ -186,6 +191,7 @@ paramiko
 parsel
 parso
 pathlib2
+pefile
 peppercorn
 pickleshare
 pillow
@@ -239,6 +245,7 @@ python-json-logger
 python-jsonrpc-server
 python-language-server
 python-memcached
+python-ptrace
 python-scrapyd-api
 python-slugify
 python-ulid
@@ -277,6 +284,7 @@ selenium
 Send2Trash
 sendgrid
 service-identity
+setuptools
 shortuuid
 simplejson
 six
@@ -324,6 +332,7 @@ webcolors
 webdriver-manager
 webencodings
 websocket-client
+Whoosh
 widgetsnbextension
 wrapt
 wsproto
