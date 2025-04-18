@@ -13,7 +13,7 @@ from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 
 from django.contrib.auth import login,logout
-
+from core.views import *
 from core.mixins import BaseListMixin,BaseDetailMixin,BaseCreateMixin,BaseUpdateMixin,BaseDeleteMixin
 
 
@@ -22,7 +22,7 @@ from invitations.forms import InvitationForm
 
 from users.tokens import account_activation_token
 
-class InvitationListView(BaseListMixin,ListView):
+class InvitationListView(BaseListView):
     model = Invitation
     paginate_by = 2
 
@@ -35,7 +35,7 @@ class InvitationListView(BaseListMixin,ListView):
         return queryset
 
 
-class InvitationDetailView(BaseDetailMixin,DetailView):
+class InvitationDetailView(BaseDetailView):
     model = Invitation
    
     queryset = Invitation.objects.prefetch_related('company__profiles').select_related('user')
@@ -47,7 +47,7 @@ class InvitationDetailView(BaseDetailMixin,DetailView):
         return queryset
 
 
-class InvitationCreateView(BaseCreateMixin,CreateView):
+class InvitationCreateView(BaseCreateView):
     model = Invitation
     form_class = InvitationForm
 
@@ -83,7 +83,7 @@ class InvitationCreateView(BaseCreateMixin,CreateView):
    
 
 
-class InvitationUpdateView(BaseUpdateMixin,UpdateView):
+class InvitationUpdateView(BaseUpdateView):
     model = Invitation
     form_class = InvitationForm
 
@@ -103,7 +103,7 @@ class InvitationUpdateView(BaseUpdateMixin,UpdateView):
    
 
 
-class InvitationDeleteView(BaseDeleteMixin,DeleteView):
+class InvitationDeleteView(BaseDeleteView):
     model = Invitation
 
     queryset = Invitation.objects.prefetch_related('company__profiles').select_related('user')

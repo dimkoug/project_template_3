@@ -1,0 +1,30 @@
+{% load core %}
+<div class="row py-2">
+    <div class="col">
+          <table class="table table-stripped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for obj in object_list %}
+              <tr>
+                <td><a href="{% get_detail_url obj  %}">{{obj}}</a></td>
+                <td>
+                  <a href="{% get_detail_url obj %}">Detail</a>
+									<a href="{% get_change_url obj %}">Update</a>
+									<a href="{% get_delete_url obj %}">Delete</a>
+                  <a href="{% url 'invitations:resend-invitation' obj.id %}">Resend Invitation</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+  </div>
+  <div class="d-flex flex-row">
+    <div class="col">
+      {% include 'partials/_pagination.html' %}
+    </div>

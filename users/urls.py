@@ -10,8 +10,8 @@ from users.views import (
 urlpatterns = [
     path('signup/type/', SignupTypeView.as_view(), name='signup-type'),
     path('signup/', SignupView.as_view(), name='signup'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+#     path('login/', LoginView.as_view(), name='login'),
+#     path('logout/', LogoutView.as_view(), name='logout'),
     path('password_reset', PasswordResetView.as_view(),
          name='password_reset'),
     path('password_reset/done', PasswordResetDoneView.as_view(),

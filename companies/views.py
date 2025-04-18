@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView,UpdateView,DeleteView
 
 
 from core.mixins import BaseListMixin,BaseDetailMixin,BaseCreateMixin,BaseUpdateMixin,BaseDeleteMixin
-
+from core.views import *
 from companies.models import Company
 from companies.forms import CompanyForm, PermissionSelectForm
 
@@ -37,7 +37,7 @@ def assign_permissions(request, company_id, user_id):
 
 
 
-class CompanyListView(BaseListMixin,ListView):
+class CompanyListView(BaseListView):
     model = Company
     fields = {}
     queryset = Company.objects.prefetch_related('profiles')
@@ -51,7 +51,7 @@ class CompanyListView(BaseListMixin,ListView):
     
 
 
-class CompanyDetailView(BaseDetailMixin,DetailView):
+class CompanyDetailView(BaseDetailView):
     model = Company
     queryset = Company.objects.prefetch_related('profiles__user')
 
@@ -62,7 +62,7 @@ class CompanyDetailView(BaseDetailMixin,DetailView):
         return queryset
     
 
-class CompanyCreateView(BaseCreateMixin,CreateView):
+class CompanyCreateView(BaseCreateView):
     model = Company
     form_class = CompanyForm
 
@@ -72,7 +72,7 @@ class CompanyCreateView(BaseCreateMixin,CreateView):
         return super().form_valid(form)
 
 
-class CompanyUpdateView(BaseUpdateMixin,UpdateView):
+class CompanyUpdateView(BaseUpdateView):
     model = Company
     form_class = CompanyForm
     queryset = Company.objects.prefetch_related('profiles')
@@ -85,7 +85,7 @@ class CompanyUpdateView(BaseUpdateMixin,UpdateView):
         return queryset
 
 
-class CompanyDeleteView(BaseDeleteMixin,DeleteView):
+class CompanyDeleteView(BaseDeleteView):
     model = Company
     queryset = Company.objects.prefetch_related('profiles')
 
