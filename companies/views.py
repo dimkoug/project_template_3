@@ -29,7 +29,7 @@ def assign_permissions(request, company_id, user_id):
             # Add selected permissions
             user.user_permissions.set(form.cleaned_data['permissions'])
             
-            return redirect(reverse('companies:company-detail', kwargs={"pk":company_id}))  # Redirect after successful save
+            return redirect(reverse('companies:company_detail', kwargs={"pk":company_id}))  # Redirect after successful save
     else:
         form = PermissionSelectForm(app_labels=app_labels)
     
