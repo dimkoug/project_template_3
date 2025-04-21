@@ -30,7 +30,7 @@ class FormInvalidMixin:
 
 class AjaxMixin:
     def dispatch(self, *args, **kwargs):
-        self.ajax_partial = '{}/partials/{}_list_partial.html'.format(self.model._meta.app_label,self.model.__name__.lower())
+        self.ajax_partial = '{}/partials/{}_list.html'.format(self.model._meta.app_label,self.model.__name__.lower())
         return super().dispatch(*args, **kwargs)
     def get(self, request, *args, **kwargs):
         try:
@@ -94,8 +94,8 @@ class ModelMixin:
         app = model._meta.app_label
         model_name = model.__name__.lower()
         title = model._meta.verbose_name_plural.capitalize()
-        back_url = reverse("{}:{}-list".format(app, model_name))
-        create_url = reverse("{}:{}-create".format(app, model_name))
+        back_url = reverse("{}:{}_list".format(app, model_name))
+        create_url = reverse("{}:{}_add".format(app, model_name))
         context['app'] = app
         context['model'] = model
         context['model_name'] = model_name
@@ -144,13 +144,13 @@ class FormMixin:
     def form_valid(self, form):
         if 'continue' in self.request.POST:
             form.save()
-            return redirect(reverse_lazy('{}:{}-update'.format(
+            return redirect(reverse_lazy('{}:{}_change'.format(
                 form.instance._meta.app_label,
                 form.instance.__class__.__name__.lower()),
                 kwargs={'pk': form.instance.pk}))
         if 'new' in self.request.POST:
             form.save()
-            return redirect(reverse_lazy('{}:{}-create'.format(
+            return redirect(reverse_lazy('{}:{}_add'.format(
                 form.instance._meta.app_label,
                 form.instance.__class__.__name__.lower())))
         return super().form_valid(form)
@@ -170,7 +170,7 @@ class FormMixin:
 
 class SuccessUrlMixin:
     def get_success_url(self):
-        return reverse_lazy('{}:{}-list'.format(
+        return reverse_lazy('{}:{}_list'.format(
             self.model._meta.app_label, self.model.__name__.lower()))
 
 
