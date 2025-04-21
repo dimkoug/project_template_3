@@ -1,5 +1,6 @@
 import random
 import string
+from urllib.parse import urlparse
 from django.apps import apps
 from django.db.models import Q
 from django.db import models
@@ -46,15 +47,19 @@ def get_pagination(request, queryset, items):
     return (paginator, paginator.num_pages, items_page)
 
 
+
 def is_ajax(request):
     # Check if it's an AJAX request
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         origin = request.headers.get("Origin") or request.headers.get("Referer")
+        parsed_url = urlparse(origin)
+        ip = parsed_url.hostname
+        print("ajax origin:",ip)
 
-        if origin:
+        if ip:
             allowed_origins = getattr(settings, "ALLOWED_ORIGINS", [])
             
-            if any(origin.startswith(allowed) for allowed in allowed_origins):
+            if any(ip.startswith(allowed) for allowed in allowed_origins):
                 return True
 
     return False
