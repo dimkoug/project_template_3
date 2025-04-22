@@ -2,6 +2,7 @@ import uuid
 import os
 import hashlib
 import datetime
+import importlib
 from uuslug import uuslug
 from urllib.parse import unquote
 from django.urls import reverse_lazy
@@ -17,20 +18,48 @@ class Url(models.Model):
     class Meta:
         abstract = True
 
+    def get_view_class(self, klass,action):
+        """
+        Dynamically import the view based on naming convention:
+        `{AppLabel}.views.{ModelName}{Action}View`
+        """
+        app = self._meta.app_label
+        model = self.__class__.__name__
+        view_class_name = f"{model}{klass.capitalize()}View"
+        try:
+            views_module = importlib.import_module(f"{app}.views")
+            return getattr(views_module, view_class_name)
+        except (ModuleNotFoundError, AttributeError):
+            return None
+
+    def get_url(self, klass, action):
+        view_class = self.get_view_class(klass,action)
+        if not view_class:
+            return ""
+
+        pk_kwarg = getattr(view_class, "pk_url_kwarg", "pk")
+        print(pk_kwarg)
+        pk_value = getattr(self, pk_kwarg, None)
+        print(pk_value)
+        if pk_value is None:
+            return ""
+
+        return reverse_lazy(
+            f"{self._meta.app_label}:{self.__class__.__name__.lower()}_{action}",
+            kwargs={pk_kwarg: pk_value}
+        )
 
     @property
     def get_view_url(self):
-        return reverse_lazy(f"{self._meta.app_label}:{self.__class__.__name__.lower()}_view",kwargs={"pk":self.id})
-
+        return self.get_url("detail","view")
 
     @property
     def get_change_url(self):
-        return reverse_lazy(f"{self._meta.app_label}:{self.__class__.__name__.lower()}_change",kwargs={"pk":self.id})
-
+        return self.get_url("update","change")
 
     @property
     def get_delete_url(self):
-        return reverse_lazy(f"{self._meta.app_label}:{self.__class__.__name__.lower()}_delete",kwargs={"pk":self.id})
+        return self.get_url("delete","delete")
 
 
 
