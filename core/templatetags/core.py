@@ -164,26 +164,42 @@ def add_button(context, app=None):
     return {"url":url}
 
 
-@register.inclusion_tag("partials/_title.html",takes_context=True)
-def get_title(context):
-    view = context["view"]
-    model = view.model
-    return {"title":model._meta.verbose_name_plural.capitalize()}
-
-@register.simple_tag
-def get_detail_url(obj):
-    url = reverse(f"{obj._meta.app_label}:{obj.__class__.__name__.lower()}_view",kwargs={"pk":obj.pk})
+@register.simple_tag(takes_context=True)
+def get_view_url(context,obj):
+    view = context['view']
+    app_name = obj._meta.app_label
+    action = 'view'
+    model_name = obj.__class__.__name__.lower()
+    if hasattr(view,'pk_url_kwarg'):
+        url = reverse(f"{app_name}:{model_name}_{action}",kwargs={view.pk_url_kwarg:getattr(obj,view.pk_url_kwarg)})
+    else:
+        url = reverse(f"{app_name}:{model_name}_{action}",kwargs={"pk":obj.id})
     return url
 
-@register.simple_tag
-def get_change_url(obj):
-    url = reverse(f"{obj._meta.app_label}:{obj.__class__.__name__.lower()}_change",kwargs={"pk":obj.pk})
+@register.simple_tag(takes_context=True)
+def get_change_url(context,obj):
+    view = context['view']
+    app_name = obj._meta.app_label
+    action = 'change'
+    model_name = obj.__class__.__name__.lower()
+    if hasattr(view,'pk_url_kwarg'):
+        url = reverse(f"{app_name}:{model_name}_{action}",kwargs={view.pk_url_kwarg:getattr(obj,view.pk_url_kwarg)})
+    else:
+        url = reverse(f"{app_name}:{model_name}_{action}",kwargs={"pk":obj.id})
     return url
 
-@register.simple_tag
-def get_delete_url(obj):
-    url = reverse(f"{obj._meta.app_label}:{obj.__class__.__name__.lower()}_delete",kwargs={"pk":obj.pk})
+@register.simple_tag(takes_context=True)
+def get_delete_url(context,obj):
+    view = context['view']
+    app_name = obj._meta.app_label
+    action = 'delete'
+    model_name = obj.__class__.__name__.lower()
+    if hasattr(view,'pk_url_kwarg'):
+        url = reverse(f"{app_name}:{model_name}_{action}",kwargs={view.pk_url_kwarg:getattr(obj,view.pk_url_kwarg)})
+    else:
+        url = reverse(f"{app_name}:{model_name}_{action}",kwargs={"pk":obj.id})
     return url
+
 
 
 
