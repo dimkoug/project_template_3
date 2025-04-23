@@ -11,9 +11,9 @@
             <tbody>
               {% for obj in object_list %}
               <tr>
-                <td><a href="{% get_detail_url obj  %}">{{obj}}</a></td>
+                <td><a href="{% get_view_url obj  %}">{{obj}}</a></td>
                 <td>
-                  <a href="{% get_detail_url obj %}">Detail</a>
+                  <a href="{% get_view_url obj %}">Detail</a>
 									<a href="{% get_change_url obj %}">Update</a>
 									<a href="{% get_delete_url obj %}">Delete</a>
                 </td>
