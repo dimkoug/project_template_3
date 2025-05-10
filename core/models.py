@@ -3,8 +3,11 @@ import os
 import hashlib
 import datetime
 import importlib
-from uuslug import uuslug
 from urllib.parse import unquote
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.db import models
 from django.utils.html import format_html, mark_safe
@@ -121,16 +124,35 @@ class UUidModel(models.Model):
         super().save(*args, **kwargs)
 
 
-class UUSlug(models.Model):
-    slug = models.SlugField(max_length=50, unique=True,
-        help_text='Unique value for page URL, created from name.')
-
+class ConfigurableSlugModel(models.Model):
     class Meta:
         abstract = True
 
+    def __init__(self, *args, **kwargs):
+        self.slug_source_field = getattr(self, 'SLUG_SOURCE_FIELD', 'name')
+        self.slug_field = getattr(self, 'SLUG_FIELD', 'slug')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        source_value = getattr(self, self.slug_source_field)
+        if source_value:
+            proposed_slug = slugify(source_value)
+            model_class = self.__class__
+            exists = model_class.objects.filter(
+                Q(**{self.slug_field: proposed_slug}) &
+                ~Q(pk=self.pk if self.pk else None)
+            ).exists()
+
+            if exists:
+                raise ValidationError({
+                    self.slug_source_field: _('An entry with this slug already exists.')
+                })
+
     def save(self, *args, **kwargs):
-        value = getattr(self, 'slug_field')
-        self.slug = uuslug(getattr(self, value), instance=self)
+        source_value = getattr(self, self.slug_source_field)
+        if source_value:
+            setattr(self, self.slug_field, slugify(source_value))
+        self.full_clean()
         super().save(*args, **kwargs)
 
 
