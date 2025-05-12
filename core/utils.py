@@ -1,3 +1,4 @@
+import json
 from django.apps import apps
 from django.http import JsonResponse, HttpResponse
 
@@ -17,11 +18,15 @@ def delete_item(request):
 def model_order(request):
     if request.method == 'POST' and is_ajax(request):
         model_name = request.POST['model_name']
-        app_name = request.POST['app']
+        app_name = request.POST['app_name']
         model = apps.get_model(app_name, model_name)
-        page_id_array = request.POST.getlist('page_id_array[]')
+
+        # Parse the JSON string
+        page_id_array = json.loads(request.POST.get('page_id_array', '[]'))
+
         objs = []
         for index, item in enumerate(page_id_array):
+            print(item)
             obj = model.objects.get(pk=item)
             obj.order = index
             objs.append(obj)
