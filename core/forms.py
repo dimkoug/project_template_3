@@ -18,6 +18,10 @@ class BootstrapForm:
                 self.fields[field].widget.attrs.update({
                     'class': 'form-control'
                 })
+            if widget_name == 'CheckboxInput':
+                self.fields[field].widget.attrs.update({
+                    'class': 'form-check-input'
+                })
 
 
 class CoreBaseForm(BootstrapForm, forms.ModelForm):
