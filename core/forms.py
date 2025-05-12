@@ -42,6 +42,10 @@ class BootstrapFormSet(BaseInlineFormSet):
                     form.fields[field].widget.attrs.update({
                         'class': 'form-control'
                     })
+                if widget_name == 'CheckboxInput':
+                    form.fields[field].widget.attrs.update({
+                        'class': 'form-check-input'
+                    })
 
     def add_fields(self, form, index):
         super().add_fields(form, index)
@@ -51,6 +55,10 @@ class BootstrapFormSet(BaseInlineFormSet):
             if widget_name not in fields:
                 form.fields[field].widget.attrs.update({
                     'class': 'form-control'
+                })
+            if widget_name == 'CheckboxInput':
+                form.fields[field].widget.attrs.update({
+                    'class': 'form-check-input'
                 })
 
 
