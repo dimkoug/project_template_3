@@ -16,26 +16,30 @@ from core.functions import *
 class BaseListView(LoginRequiredMixin,PaginationMixin, ListView):
     def dispatch(self, request, *args, **kwargs):
         model_name = self.model.__name__.lower()
-        app_label = self.model._meta.app_label
-        self.list_url = reverse_lazy(f"{app_label}:{model_name}_list")
-        self.add_url = reverse_lazy(f"{app_label}:{model_name}_add")
-        self.title = self.model._meta.verbose_name_plural.capitalize() 
-        self.ajax_partial = f"{app_label}/partials/_{model_name}_list.html"
+        field_names = [field.name for field in self.model._meta.get_fields()]
+        self.has_order = False
+        if 'order' in field_names:
+            self.has_order = True
+        app_name = self.model._meta.app_label
+        add_url = reverse_lazy(f'{app_name}:{model_name}_add')
+        self.title = f'{model_name.capitalize()} List'
+        self.add_url = add_url
+        self.template = f'{app_name}/partials/_{model_name}_list.html'
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         context = self.get_context_data(**kwargs)
         if is_ajax(request):
-            print(self.ajax_partial)
+            print(self.template)
             template = render_to_string(
-                self.ajax_partial, context, request)
+                self.template, context, request)
             return JsonResponse(template,safe=False)
         return self.render_to_response(context)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['template'] = self.ajax_partial
+        context['template'] = self.template
         context['search'] = self.request.GET.get('search', '')
         context['query_string'] = create_query_string(self.request)
         return context
