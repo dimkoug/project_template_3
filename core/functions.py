@@ -29,6 +29,19 @@ def unique_items(keys, objects):
     return unique_dicts
 
 
+def filter_dicts_by_key_value(data, key, value):
+    """
+    Filters a list of dictionaries where each dictionary contains the given key
+    and its value matches the provided value.
+
+    :param data: List[Dict] - List of dictionaries
+    :param key: str - Key to filter by
+    :param value: Any - Value to match
+    :return: List[Dict] - Filtered list of dictionaries
+    """
+    return [item for item in data if item.get(key) == value]
+
+
 
 def get_pagination(request, queryset, items):
     '''
