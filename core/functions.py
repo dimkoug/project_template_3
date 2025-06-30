@@ -1,5 +1,7 @@
 import random
 import string
+import math
+import secrets
 from urllib.parse import urlparse
 from django.apps import apps
 from django.db.models import Q
@@ -13,6 +15,45 @@ from django.apps import apps
 from django.db.models.fields.files import ImageFieldFile, FileField
 from decimal import Decimal
 from django.utils.html import format_html
+
+
+def estimate_password_entropy(password: str) -> float:
+    charset = set()
+    if any(c in string.ascii_lowercase for c in password):
+        charset.update(string.ascii_lowercase)
+    if any(c in string.ascii_uppercase for c in password):
+        charset.update(string.ascii_uppercase)
+    if any(c in string.digits for c in password):
+        charset.update(string.digits)
+    if any(c in string.punctuation for c in password):
+        charset.update(string.punctuation)
+
+    charset_size = len(charset)
+    entropy = math.log2(charset_size) * len(password) if charset_size > 0 else 0
+    return entropy
+
+def is_quantum_resistant(entropy: float) -> bool:
+    # Quantum-resistant if >= 256 classical bits (~128 quantum bits)
+    return entropy >= 256
+
+
+def generate_secure_password(length=32, use_symbols=True):
+    """
+    Generate a high-entropy password suitable to resist quantum brute force (Grover's algorithm).
+    
+    :param length: Total password length (recommended: 24–64)
+    :param use_symbols: Include special characters (True/False)
+    :return: Secure random password string
+    """
+    # Character sets
+    alphabet = string.ascii_letters + string.digits
+    if use_symbols:
+        alphabet += "!@#$%^&*()-_=+[]{};:,.<>?/|\\"
+
+    # Generate secure random password
+    password = ''.join(secrets.choice(alphabet) for _ in range(length))
+    return password
+
 
 
 def unique_items(keys, objects):
