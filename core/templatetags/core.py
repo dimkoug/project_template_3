@@ -23,6 +23,21 @@ def has_group(user_groups, group_name):
     return user_groups.filter(name__icontains=group_name).exists()
 
 
+@register.simple_tag(takes_context=True)
+def querystring_replace(context, **kwargs):
+    """
+    Return current querystring with the given params replaced.
+    Useful for keeping other pagers/filters intact.
+    """
+    request = context["request"]
+    query = request.GET.copy()
+    for k, v in kwargs.items():
+        if v is None:
+            query.pop(k, None)
+        else:
+            query[k] = v
+    encoded = query.urlencode()
+    return f"?{encoded}" if encoded else ""
 
 
 @register.simple_tag
