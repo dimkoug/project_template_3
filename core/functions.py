@@ -88,21 +88,30 @@ def filter_dicts_by_key_value(data, key, value):
 
 
 
-def get_pagination(request, queryset, items):
-    '''
-    items: The number for pagination
+def get_pagination(request, queryset, per_page=20, param_name="page"):
+    """
+    Paginate a queryset with its own GET param (e.g., ?products_page=2).
 
-    return tuple (paginator, total_pages, paginated queryset) 
-    '''
-    paginator = Paginator(queryset, items)
-    page = request.GET.get('page')
+    Args:
+        request: Django HttpRequest
+        queryset: Queryset to paginate
+        per_page: Items per page
+        param_name: GET parameter for this pager (default 'page')
+
+    Returns:
+        tuple (page_obj, paginator)
+    """
+    paginator = Paginator(queryset, per_page)
+    page_number = request.GET.get(param_name, 1)
+
     try:
-        items_page = paginator.page(page)
-    except PageNotAnInteger:
-        items_page = paginator.page(1)
+        page_obj = paginator.page(page_number)
+    except (PageNotAnInteger, TypeError):
+        page_obj = paginator.page(1)
     except EmptyPage:
-        items_page = paginator.page(paginator.num_pages)
-    return (paginator, paginator.num_pages, items_page)
+        page_obj = paginator.page(paginator.num_pages)
+
+    return page_obj, paginator
 
 
 
@@ -123,10 +132,10 @@ def is_ajax(request):
     return False
 
 
-def create_query_string(request):
+def create_query_string(request, param_name='page'):
     query_string = ''
     for key in request.GET.keys():
-        if key != 'page':
+        if key != param_name:
             value = request.GET.getlist(key)
             if len(value) > 0:
                 for item in value:
