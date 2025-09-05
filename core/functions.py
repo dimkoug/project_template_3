@@ -70,6 +70,24 @@ def unique_items(keys, objects):
     return unique_dicts
 
 
+
+@register.simple_tag(takes_context=True)
+def querystring_replace(context, **kwargs):
+    """
+    Return current querystring with the given params replaced.
+    Useful for keeping other pagers/filters intact.
+    """
+    request = context["request"]
+    query = request.GET.copy()
+    for k, v in kwargs.items():
+        if v is None:
+            query.pop(k, None)
+        else:
+            query[k] = v
+    encoded = query.urlencode()
+    return f"?{encoded}" if encoded else ""
+
+
 def filter_dicts_by_key_value(data, key, value):
     """
     Filters a list of dictionaries where each dictionary contains the given key
