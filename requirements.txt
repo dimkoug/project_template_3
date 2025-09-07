@@ -88,6 +88,7 @@ django-timezone-field
 django-uuslug
 django-webpack-loader
 djangorestframework
+djangorestframework-gis
 djangorestframework-datatables
 djangorestframework-jwt
 djangorestframework-oauth
