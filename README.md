@@ -47,5 +47,5 @@ Packages used for this template:
 Command to use for this template
 --------------------------------
 1. Install the packages in your virtualenv
-2. django-admin startproject projectname --template=https://github.com/dimkoug/project_template_3/archive/master.zip
-3. copy settings_local_sample.py to settings_local.py
+2. django-admin startproject projectname --template=https://github.com/dimkoug/project_template_3/archive/master.zip --extension=py,txt,tpl,.env_sample
+3. copy .env_sample to .env
