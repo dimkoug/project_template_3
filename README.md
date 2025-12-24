@@ -49,3 +49,4 @@ Command to use for this template
 1. Install the packages in your virtualenv
 2. django-admin startproject projectname --template=https://github.com/dimkoug/project_template_3/archive/master.zip --extension=py,txt,tpl,.env_sample
 3. copy .env_sample to .env
+4. python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
