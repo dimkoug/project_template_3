@@ -90,6 +90,7 @@ djangorestframework-oauth
 djangorestframework-xml
 djangorestframework_simplejwt
 drf-social-oauth2
+drf-spectacular
 ecdsa
 et_xmlfile
 exceptiongroup
@@ -105,7 +106,6 @@ fonttools
 fqdn
 freetype-py
 future
-GDAL
 greenlet
 gunicorn
 h11
@@ -118,7 +118,8 @@ hyperlink
 idna
 ijson
 importlib_metadata
-incremental
+Incremental
+inflection
 invoke
 ipykernel
 ipython
@@ -156,6 +157,7 @@ kiwisolver
 kombu
 lark
 lazy-object-proxy
+librt
 lxml
 Markdown
 MarkupSafe
@@ -246,7 +248,6 @@ python-http-client
 python-jose
 python-json-logger
 python-jsonrpc-server
-python-language-server
 python-memcached
 python-ptrace
 python-scrapyd-api
@@ -254,6 +255,8 @@ python-slugify
 python-ulid
 python3-openid
 pytz
+pywin32
+pywinpty
 PyYAML
 pyzmq
 qrcode
