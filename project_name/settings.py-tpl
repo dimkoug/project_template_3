@@ -22,8 +22,6 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-PUBLIC_DIR = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', '..', 'public'))
 VIRTUAL_ENV_DIR = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', '..', 'venv'))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -268,10 +266,10 @@ CACHES = {
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PUBLIC_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(PUBLIC_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 
 STATICFILES_DIRS = [
